@@ -9,7 +9,7 @@
         <link href="css/style.css" rel="stylesheet" />
     </head>
 
-    <body class="_signup">
+    <body class="_signin">
 
         <header>
             <div class="navbar navbar-fixed-top navbar-inverse">
@@ -20,7 +20,7 @@
                             <li class="_questions"><a href="index.html"><i class="icon-question-sign"></i> Questions</a></li>
                             <li class="_users"><a href=""><i class="icon-group"></i> Users</a></li>
                             <li class="_tags"><a href=""><i class="icon-tags"></i> Tags</a></li>
-                            <li><a href="#"><i class="icon-signin"></i> Log in</a></li>
+                            <li class="_signin"><a href="#"><i class="icon-signin"></i> Log in</a></li>
                             <li class="_signup"><a href="signup.html"><i class="icon-plus"></i> Sign up</a></li>
                         </ul>
 
@@ -32,40 +32,33 @@
             </div>
         </header>
 
-        <div class="container signin">
+        <div class="container sign-up-in">
             <div class="hero-unit">
-                <h1 class="sign-up-rogo">Log in to your account</h1>
+                <h1 class="sign-in-rogo">Log in to your account</h1>
+                <p>Don't have an account? <a href="signup.html">Sign up.</a>
                 <form class="form-horizontal">
                     <div class="control-group">
                         <label class="control-label" for="inputLogin"></label>
                         <div class="controls">
-                            <input type="text" id="inputLogin" placeholder="Username">
+                            <div class="input-prepend">
+                                <span class="add-on"><i class="icon-user"></i></span>
+                                <input class="span2" type="text" id="inputLogin" placeholder="username or email">
+                            </div>
                             <span class="help-inline"></span>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputEmail">Email</label>
+                        <label class="control-label" for="inputPassword"></label>
                         <div class="controls">
-                            <input type="text" id="inputEmail" placeholder="Email">
-                            <span class="help-inline"></span>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="inputPassword">Password</label>
-                        <div class="controls">
-                            <input type="password" id="inputPassword1" placeholder="Password">
-                            <span class="help-inline"></span>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="inputPasswordConfirmation">Confirm password</label>
-                        <div class="controls">
-                            <input type="password" id="inputPassword2" placeholder="Password">
-                            <span class="help-inline"></span>
+                            <div class="input-prepend">
+                                <span class="add-on"><i class="icon-unlock"></i></span>
+                                <input type="password" id="inputPassword" placeholder="password">
+                                <span class="help-inline"></span>
+                            </div>
                         </div>
                     </div>
                 </form>
-                <button type="submit" class="btn">LOG IN</button>
+                <button type="submit" class="btn">Log In</button>
             </div>
         </div>
     

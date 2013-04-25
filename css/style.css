@@ -135,7 +135,10 @@ body {
 
 /* navigation bar current page */
 body._questions .nav > li._questions,
-body._signup .nav > li._signup {
+body._signup .nav > li._signup,
+body._signin .nav > li._signin,
+body._users .nav > li._users,
+body._tags .nav > li._tags {
   background-color: #103d69;
   border-bottom: 1px solid #103d69;
 }
@@ -338,7 +341,14 @@ a.post-tag:hover {
   text-align: center;
 }
 
-.signup .hero-unit {
+/***********************************************************************
+ *
+ *                      SIGNUP AND SIGNIN PAGE
+ *
+ * 
+ ***********************************************************************/
+
+.sign-up-in .hero-unit {
   padding: 30px 60px;
   background-color: #fff;
   -webkit-border-radius: 0;
@@ -346,29 +356,37 @@ a.post-tag:hover {
           border-radius: 0;
 }
 
-.signup .hero-unit h1 {
+.sign-up-in .hero-unit h1 {
   font-size: 40px;
   color: #306aa2;
 }
 
-.signup .hero-unit form {
+.sign-up-in .hero-unit form {
   padding: 40px 10px;
   margin-top: 40px;
   margin-bottom: 0;
   background-color: #f3f5f8;
 }
 
-.signup .hero-unit form p {
+.sign-up-in .hero-unit form p {
   font-size: 13px;
   font-weight: 400;
   margin: -10px 0px 0px 180px;
 }
 
-.signup .hero-unit form div.control-group:last-child {
+.sign-up-in .hero-unit p a {
+  color: #306aa2;
+}
+
+.sign-up-in .hero-unit p a:hover {
+  color: #306aa2;
+}
+
+.sign-up-in .hero-unit form div.control-group:last-child {
   margin-bottom: 0px;
 }
 
-.signup .hero-unit button.btn {
+.sign-up-in .hero-unit button.btn {
   margin-top: 15px;
   width: 820px;
   height: 50px;
@@ -388,18 +406,19 @@ a.post-tag:hover {
           transition: all 0.2s linear;
 }
 
-.signup .hero-unit button.btn:hover {
+.sign-up-in .hero-unit button.btn:hover {
   background-color: #103d69;
 }
 
-.signup .control-label {
+.sign-up-in .control-label {
   color: #306aa2;
   padding: 10px 0px;
 }
 
-.signup .hero-unit .controls input {
+.sign-up-in .hero-unit .controls input {
   padding: 10px 10px;
   border: 0;
+  border-left: 1px solid #fff;
   width: 250px;
   -webkit-border-radius: 0px;
      -moz-border-radius: 0px;
@@ -409,37 +428,48 @@ a.post-tag:hover {
           box-shadow: none;
 }
 
-.signup .hero-unit .controls input:focus {
+.sign-up-in .hero-unit .controls input:focus {
   background-color: #80a9d1;
   color: #fff;
 }
 
-.signup .hero-unit .controls input:-moz-placeholder {
+.sign-up-in .hero-unit .controls input:-moz-placeholder {
   color: #ccc;
 }
 
-.signup .hero-unit .controls input:-ms-input-placeholder {
+.sign-up-in .hero-unit .controls input:-ms-input-placeholder {
   color: #ccc;
 }
 
-.signup .hero-unit .controls input::-webkit-input-placeholder {
+.sign-up-in .hero-unit .controls input::-webkit-input-placeholder {
   color: #ccc;
 }
 
-.signup .hero-unit .controls input:focus::-webkit-input-placeholder {
+.sign-up-in .hero-unit .controls input:focus::-webkit-input-placeholder {
   color: #fff;
 }
 
-.signup .hero-unit .controls input:focus:-moz-placeholder {
+.sign-up-in .hero-unit .controls input:focus:-moz-placeholder {
   color: #fff;
 }
 
-.signup .hero-unit .controls input:focus:-ms-input-placeholder {
+.sign-up-in .hero-unit .controls input:focus:-ms-input-placeholder {
   color: #fff;
 }
 
-.signup .hero-unit .control-group.error input {
+.sign-up-in .hero-unit .control-group.error input {
   border: 1px solid #b94a48;
+  padding: 9px 10px;
+}
+
+.sign-up-in .input-prepend .add-on {
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  padding: 10px 9px;
+  color: #fff;
+  border: 0;
+  background-color: #80a9d1;
 }
 
 
