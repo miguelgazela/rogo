@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="UTF-8">
+
+        <title>Rogo - Collaborative Questions & Answers</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <link href="../css/style.css" rel="stylesheet" />
+    </head>
+
+    <body class="">
+
+        <header>
+            <div class="navbar navbar-fixed-top navbar-inverse">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <a class="brand" href="#"><i class="icon-comments-alt"></i> ROGO</a>
+                        <ul class="nav">
+                            <li class="_questions"><a href="index.html"><i class="icon-question-sign"></i> Questions</a></li>
+                            <li class="_users"><a href=""><i class="icon-group"></i> Users</a></li>
+                            <li class="_tags"><a href=""><i class="icon-tags"></i> Tags</a></li>
+                            <li class="_signin"><a href="#"><i class="icon-signin"></i> Log in</a></li>
+                            <li class="_signup"><a href="signup.html"><i class="icon-plus"></i> Sign up</a></li>
+                        
+                        <form class="navbar-search pull-right">
+                            <input type="text" class="search-query" placeholder="Search">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="row">
+                <div class="span9">
+                    <h2 class="add_new_question">Add Question</h2>
+                    <form id="ask_question_form" class="form-horizontal" action="{$BASE_URL}actions/questions/add_action.php" method="post">
+                        <div class="control-group inputQuestionTitle">
+                            <label class="control-label" for="inputQuestionTitle">Title</label>
+                            <div class="controls">
+                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific.">
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="control-group inputQuestionTitle">
+                            <label class="control-label" for="inputQuestionTitle">Details</label>
+                            <div class="controls">
+                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetais()"></textarea>
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="control-group inputQuestionTags">
+                            <label class="control-label" for="inputQuestionTags">Tags</label>
+                            <div class="controls">
+                                <input type="text" id="inputQuestionTags" onblur="" placeholder="at least one tag, max 5 tags">
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" value="" name="anonymously">
+                            Add Anonymously
+                        </label>
+                        <input type="text" id="hidden-tags" name="tags" value="" style="display:none">
+                    </form>
+                    <button type="submit" form="ask_question_form" class="btn">Add Question</button>
+                </div>
+
+                <div class="span3">
+                    <div class="sidebar-content affix">
+                        <a href="https://google.com" class="ask-question-btn">Ask Question</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    </body>
+</html>​

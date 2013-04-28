@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="UTF-8">
+
+        <title>Rogo - Collaborative Questions & Answers</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <link href="../css/style.css" rel="stylesheet" />
+    </head>
+
+    <body class="_questions">
+
+        <header>
+            <div class="navbar navbar-fixed-top navbar-inverse">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <a class="brand" href="#"><i class="icon-comments-alt"></i> ROGO</a>
+                        <ul class="nav">
+                            <li class="_questions"><a href="index.html"><i class="icon-question-sign"></i> Questions</a></li>
+                            <li class="_users"><a href=""><i class="icon-group"></i> Users</a></li>
+                            <li class="_tags"><a href=""><i class="icon-tags"></i> Tags</a></li>
+                            <li class="_signin"><a href="#"><i class="icon-signin"></i> Log in</a></li>
+                            <li class="_signup"><a href="signup.html"><i class="icon-plus"></i> Sign up</a></li>
+                        </ul>
+
+                        <form class="navbar-search pull-right">
+                            <input type="text" class="search-query" placeholder="Search">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="row">
+                <div class="span9">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">newest</a></li>
+                        <li><a href="#">votes</a></li>
+                        <li><a href="#">active</a></li>
+                        <li><a href="#">unanswered</a></li>
+                    </ul>
+
+                    <section id="questions">
+
+                        <div class="question-summary">
+                            <div class="summary">
+                                <div class="media">
+                                    <a class="pull-left avatar-frame" href="#">
+                                        <img class="media-object" src="../img/imageholder.png" />
+                                    </a>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><a href="#">Passing JSON data between Python and Java Datagram Sockets</a></h5>
+                                        <p class="excerpt">Hi I have a very simple Java server and two clients. One client is Java based and other is python based. When I send any string from Java client to java server or vice versa it works fine. When I send ...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-stats pull-right">
+                                <div class="stats-answers answered">
+                                    <span class="stat-number">5</span>
+                                    <span class="stat-description">answers</span>
+                                </div>
+                                <div class="stats-votes voted">
+                                    <span class="stat-number">3</span>
+                                    <span class="stat-description">votes</span>
+                                </div>
+                                <div class="stats-views viewed">
+                                    <span class="stat-number">20</span>
+                                    <span class="stat-description">views</span>
+                                </div>
+                            </div>
+
+                            <div class="tags">
+                                <a href="#" class="post-tag">java</a>
+                                <a href="#" class="post-tag">python</a>
+                                <a href="#" class="post-tag">json</a>
+                                <a href="#" class="post-tag">sockets</a>
+                                <a href="#" class="post-tag">datagram</a>
+                            </div>
+                            <div class="started">
+                                <span class="action-time">asked 45 seconds ago</span>
+                                <div class="user-info">
+                                    <a href="#" class="username">miguel.gazela</a>
+                                    <span class="reputation"><i class="icon-trophy"></i> 450</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-summary">
+                            <div class="summary">
+                                <div class="media">
+                                    <a class="pull-left avatar-frame" href="#">
+                                        <img class="media-object" src="../img/imageholder.png" />
+                                    </a>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><a href="#">How to secure my Account after Logout? [answered]</a></h5>
+                                        <p class="excerpt">I have a situation- after I logout from a page if Someone click "Go Back" Button in a browser it automatic goes into back page again. In Logout.java (Servlet) I use: session.invalidate(); ...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-stats pull-right">
+                                <div class="stats-answers answer-accepted">
+                                    <span class="stat-number">2</span>
+                                    <span class="stat-description">answers</span>
+                                </div>
+                                <div class="stats-votes voted">
+                                    <span class="stat-number">1</span>
+                                    <span class="stat-description">votes</span>
+                                </div>
+                                <div class="stats-views viewed">
+                                    <span class="stat-number">34</span>
+                                    <span class="stat-description">views</span>
+                                </div>
+                            </div>
+                            <div class="tags">
+                                <a href="#" class="post-tag">jsp</a>
+                                <a href="#" class="post-tag">java-ee</a>
+                                <a href="#" class="post-tag">servlet-filters</a>
+                                <a href="#" class="post-tag">logout</a>
+                                <a href="#" class="post-tag">back-button-control</a>
+                            </div>
+                            <div class="started">
+                                <span class="action-time">asked Jun 27 '12 at 13:51</span>
+                                <div class="user-info">
+                                    <a href="#" class="username">Fenec</a>
+                                    <span class="reputation"><i class="icon-trophy"></i> 740</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-summary">
+                            <div class="summary">
+                                <div class="media">
+                                    <a class="pull-left avatar-frame" href="#">
+                                        <img class="media-object" src="../img/imageholder.png" />
+                                    </a>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><a href="#">Why this Bootstrap confirm dialog is not working?</a></h5>
+                                        <p class="excerpt">I have this following code for making a confirm dialog using Bootstrap modal, it is suppose to be called within a closure: this.events.register(this, function(e) { this.makeModal(e …</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-stats pull-right">
+                                <div class="stats-answers">
+                                    <span class="stat-number">0</span>
+                                    <span class="stat-description">answers</span>
+                                </div>
+                                <div class="stats-votes">
+                                    <span class="stat-number">0</span>
+                                    <span class="stat-description">votes</span>
+                                </div>
+                                <div class="stats-views">
+                                    <span class="stat-number">0</span>
+                                    <span class="stat-description">views</span>
+                                </div>
+                            </div>
+                            <div class="tags">
+                                <a href="#" class="post-tag">bootstrap</a>
+                                <a href="#" class="post-tag">web development</a>
+                            </div>
+                            <div class="started">
+                                <span class="action-time">asked Mar 25</span>
+                                <div class="user-info">
+                                    <a href="#" class="username">Hypnos</a>
+                                    <span class="reputation"><i class="icon-trophy"></i> 122</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                    
+                </div>
+
+                <div class="span3">
+                    <div class="sidebar-content affix">
+                        <a href="https://google.com" class="ask-question-btn">Ask Question</a>
+                        <div class="questions-count">
+                            <h3 class="questions-counter">1,030,751</h3>
+                            <p>questions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="span4">
+                        <ul>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                        </ul>
+                    </div>
+                    <div class="span4">
+                        <ul>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                        </ul>
+                    </div>
+                    <div class="span4">
+                        <ul>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                            <li><a href="#">link</a></li>
+                        </ul>
+                    </div>
+        </footer>
+    
+    <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    </body>
+</html>​
