@@ -9,7 +9,7 @@
     // Never store passwords in clear text!
     $userInfo = getUserInfoByLogin($username, sha1($password));
 
-    if ($userInfo) {
+    if ($userInfo['result'] == "OK") {
         $_SESSION['s_username'] = $username;
         $_SESSION['s_user_permission'] = $userInfo['permissiontype'];
         $_SESSION['s_userid'] = $userInfo['userid'];
@@ -17,8 +17,9 @@
         header("Location: $BASE_URL"."index.php");
         exit;
     } else {
-        $_SESSION['s_error']['global'] = "Wrong username or password";
-        header("Location: $BASE_URL"."pages/auth/signup.php");
+        $_SESSION['s_error']['login'] = "Wrong username or password";
+        $_SESSION['s_values'] = $_POST;
+        header("Location: $BASE_URL"."pages/auth/signin.php");
         exit;
     }
 ?>

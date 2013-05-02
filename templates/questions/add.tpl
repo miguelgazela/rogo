@@ -29,7 +29,7 @@
                         <div class="control-group inputQuestionTags">
                             <label class="control-label" for="inputQuestionTags">Tags</label>
                             <div class="controls">
-                                <input type="text" name="tags" id="inputQuestionTags" onblur="return validateTags()" value="" placeholder="at least one tag, max 5 tags">
+                                <input type="text" autocomplete="off" name="tags" id="inputQuestionTags" onblur="return validateTags()" value="" placeholder="at least one tag, max 5 tags">
                             </div>
                             <span class="help-block"></span>
                         </div>
@@ -56,6 +56,63 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         {include file="../common-js.tpl"}
+
+        <script>
+            var SPACE_KEY = 32;
+            var COMMA_KEY = 188;
+            $("#inputQuestionTags").keyup(function(event) {
+                if(event.which == SPACE_KEY) {
+                    var tag = $("#inputQuestionTags").val().toLowerCase();
+                    tag = tag.replace(",","");
+                    if(tag.length > 1) {
+
+                        // check if tag already exists
+                        var exists = false;
+                        $("a.post-tag").each(function() {
+                            if(!exists && $(this).text() == tag) {
+                                exists = true;
+                            }
+                        });
+
+                        if(!exists) {
+                            $("div.tags_container").append("<a class='post-tag'>"+tag+"<i class='icon-remove' onclick='return removeThisTag(this)'></i></a>");
+
+                            // disable input when 5 tags are added
+                            if($("a.post-tag").length == 5) {
+                                $("#inputQuestionTags").prop('disabled', true);
+                                $("#inputQuestionTags").attr('placeholder', 'no more tags allowed');
+                            }
+                        }
+                    }
+                    $("#inputQuestionTags").val("");
+                }
+            })
+
+            $('#inputQuestionTags').keydown(function(event){
+                if(event.which == COMMA_KEY) {
+                    return false;
+                }
+            })
+
+            $("#ask_question_form").submit(function() {
+                if(validateQuestion() && validateQuestionDetails() && validateTags()) {
+                    var tags = "";
+                    // add each tag to a comma separated list
+                    $("a.post-tag").each(function(index) {
+                        if(index == 0) {
+                            var tag = $(this).text();
+                            tag = tag.substr(0, tag.length-1);
+                            tags += tag;
+                        } else {
+                            tags += ("," + $(this).text());
+                        }
+                    });
+                    $('#inputQuestionTags').val(tags);
+                    return true;
+                }
+               return false;
+            })
+        </script>
     </body>
 </html>​
 

@@ -1,4 +1,4 @@
-<?
+<?php
     // initialize
     include_once('../../common/init.php');
 
@@ -10,13 +10,14 @@
     }
     if(!validSorting($_GET['sort'])) {
         $_GET['sort'] = "newest";
-    }        
+    }
 
     $questions = getQuestionsWithSorting($_GET['sort']);
 
     // send data to smarty
     $smarty->assign('sorted_questions', $questions);
     $smarty->assign('sort_method', $_GET['sort']);
+    $smarty->assign('number_questions', count($questions));
 
     // display smarty template
     $smarty->display('questions/list.tpl');
@@ -25,5 +26,4 @@
     function validSorting($sort) {
         return ($sort == 'newest' || $sort == 'votes' || $sort == 'active' || $sort == 'unanswered');
     }
-
 ?>

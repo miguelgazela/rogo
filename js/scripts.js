@@ -3,62 +3,6 @@ var SPACE_KEY = 32;
 
 $(document).ready(function() {
     console.log("JQuery working");
-
-    $("#signup_form").submit(function() {
-        return (validateUsername() && validateEmail() && validatePassword() && confirmPassword());
-    })
-
-    $("#signin_form").submit(function() {
-        return (validateUsername() && validatePassword());
-    })
-
-    $("#ask_question_form").submit(function() {
-
-        if(validateQuestion() && validateQuestionDetails() && validateTags()) {
-            var tags = "";
-
-            // add each tag to a comma separated list
-            $("a.post-tag").each(function(index) {
-                if(index == 0) {
-                    var tag = $(this).text();
-                    tag = tag.substr(0, tag.length-1);
-                    tags += tag;
-                } else {
-                    tags += ("," + $(this).text());
-                }
-            });
-
-            return true;
-        }
-       return false;
-    })
-
-    $("#inputQuestionTags").keyup(function(event) {
-        if(event.which == SPACE_KEY) {
-            var tag = $("#inputQuestionTags").val();
-            if(tag.length > 1) {
-
-                // check if tag already exists
-                var exists = false;
-                $("a.post-tag").each(function() {
-                    if(!exists && $(this).text().match(tag)) {
-                        exists = true;
-                    }
-                });
-
-                if(!exists) {
-                    $("div.tags_container").append("<a class='post-tag'>"+tag+"<i class='icon-remove' onclick='return removeThisTag(this)'></i></a>");
-
-                    // disable input when 5 tags are added
-                    if($("a.post-tag").length == 5) {
-                        $("#inputQuestionTags").prop('disabled', true);
-                        $("#inputQuestionTags").attr('placeholder', 'no more tags allowed');
-                    }
-                }
-            }
-            $("#inputQuestionTags").val("");
-        }
-    })
 })
 
 function validateTags() {
@@ -83,11 +27,11 @@ function removeThisTag(event) {
 
 function validateUsername() {
     var inputUsername = $('#inputUsername');
-    var validUsernamePattern = /^[A-Z0-9a-z_ .]{4,20}$/; /* allows spaces and underscores, digits, no special chars, 4 to 20 chars long */
+    var validUsernamePattern = /^[A-Z0-9a-z_.]{4,20}$/; /* allows spaces and underscores, digits, no special chars, 4 to 20 chars long */
 
     if(!validUsernamePattern.test(inputUsername.val())) { 
         $('div.inputUsername').addClass("error");
-        $('div.inputUsername span.help-block').text('Only alfanumeric chars, spaces and underscores. Between 4 and 20 chars.');
+        $('div.inputUsername span.help-block').text('Invalid username. Between 4 and 20 alfanumeric chars, underscores and points.');
         return false;
     } else { /* valid */
         $('div.inputUsername').removeClass("error");
@@ -98,16 +42,18 @@ function validateUsername() {
 
 function validateEmail() {
 
-    $("#inputEmail").verimail({messageElement: "div.inputEmail span.help-inline"});
-    return true; /* TODO NOT WORKING
+    var inputEmail = $('#inputEmail');
+    var validEmailPattern = /^[[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
 
-    if($('#inputEmail').getVerimailStatus() < 0)
-        console.log("invalid email");
+    if(!validEmailPattern.test(inputEmail.val())) {
+        $('div.inputEmail').addClass("error");
+        $('div.inputEmail span.help-block').text('Invalid email');
+        return false;
     } else {
-        console.log($('input#inputEmail').getVerimailStatus());
-        console.log("valid email");
+        $('div.inputEmail').removeClass("error");
+        $('div.inputEmail span.help-block').text('');
+        return true;
     }
-    */
 }
 
 function validatePassword() {
@@ -116,7 +62,7 @@ function validatePassword() {
 
     if(!validPasswordPattern.test(inputPassword.val())) {
         $('div.inputPassword').addClass("error");
-        $('div.inputPassword span.help-block').text('Between 6 and 30 chars, digits and !@#$%^&*_');
+        $('div.inputPassword span.help-block').text('Between 6 and 30 alfanumeric chars and !@#$%^&*_');
         return false;
     } else {
         $('div.inputPassword').removeClass("error");

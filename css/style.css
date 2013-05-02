@@ -2,7 +2,6 @@ body {
   padding-top: 40px;
 }
 
-
 /* change this to account for phones, tablets, etc... */
 @media all and (min-width: 768px) and (max-width: 979px) { 
 
@@ -133,6 +132,23 @@ body {
   color: #fff;
 }
 
+.navbar-inverse .nav li.dropdown>.dropdown-toggle .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.navbar-inverse .nav li.dropdown.open>.dropdown-toggle {
+  background-color: #103d69;
+}
+
+.navbar-inverse .nav li.dropdown>ul.dropdown-menu {
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+}
+
+
+
 /* navigation bar current page */
 body._questions .nav > li._questions,
 body._signup .nav > li._signup,
@@ -145,14 +161,7 @@ body._tags .nav > li._tags {
 
 body > .container {
   margin-top: 30px;
-}
-
-.span9 {
-  height: 2000px;
-}
-
-.span3 {
-  height: 2000px;
+  min-height: 1000px;
 }
 
 .nav-tabs > li > a {
@@ -182,7 +191,6 @@ body > .container {
 }
 
 #questions {
-
 }
 
 .question-summary {
@@ -313,6 +321,43 @@ a.post-tag:hover {
   /*-moz-border-radius: 30px; Disabled for FF1+ */
 }
 
+.pagination ul {
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+}
+
+.pagination ul>li>a {
+  background-color: #80a9d1;
+  color:white;
+  border-color:white;
+}
+
+.pagination ul>li.active>a {
+  background-color: #306aa2;
+  color:white;
+  border-color:white;
+}
+
+.pagination ul>li>a:hover {
+  background-color: #306aa2;
+  color: white;
+}
+
+.pagination ul>li:first-child>a,
+.pagination ul>li:last-child>a {
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+}
+
+/***********************************************************************
+ *
+ *                      SIDEBAR
+ *
+ * 
+ ***********************************************************************/
+
 .sidebar-content a.ask-question-btn {
   background-color: #306aa2;
   display: block;
@@ -322,6 +367,10 @@ a.post-tag:hover {
   color: #fff;
   text-align: center;
   vertical-align: center;
+  -webkit-transition: all 0.2s linear;
+     -moz-transition: all 0.2s linear;
+       -o-transition: all 0.2s linear;
+          transition: all 0.2s linear; 
 }
 
 .sidebar-content a.ask-question-btn:hover {
@@ -339,6 +388,30 @@ a.post-tag:hover {
 .sidebar-content div.questions-count > p {
   color: #306aa2;
   text-align: center;
+}
+
+.sidebar-content .popular-tags {
+  border-top: 1px solid #eaeaea;
+  padding: 5px;
+}
+
+.sidebar-content .popular-tags h4.popular-tags-header {
+  font-size: 16px;
+  color: #306aa2;
+}
+
+.sidebar-content .popular-tags .popular-tag {
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #a6a6a6;
+}
+
+.sidebar-content .join-rogo-ad {
+  width: 220px;
+  text-align: justify;
+  margin-top: 10px;
+  padding: 5px;
+  border-top: 1px solid #eaeaea;
 }
 
 /***********************************************************************
@@ -574,19 +647,24 @@ form#ask_question_form div.tags_container a.post-tag i:hover{
   color: #faac3c;
 }
 
-/**
+/***********************************************************************
  *
- *  VIEW A QUESTION SECTION
+ *                      VIEW QUESTION SECTION
+ *
  * 
- */
+ ***********************************************************************/
 
 div.question-header {
-  border-bottom: 1px solid #306aa2;
+  border-bottom: 1px solid #eaeaea;
   margin-bottom: 10px;
 }
 
 div.question-header h3 {
   margin: 0;
+}
+
+div.question-info {
+  min-height: 180px;
 }
 
 div.question-info div.question-side-container img {
@@ -620,7 +698,7 @@ div.question-info .question-container .question-footer .edited {
   display:inline-block;
   width: 310px;
   padding-left: 5px;
-  border: 1px solid #306aa2;
+  border: 1px solid #aaa;
   border-right: 0;
 }
 
@@ -629,7 +707,7 @@ div.question-info .question-container .question-footer .edited {
 }
 
 .question-answers .answers-header {
-  border-bottom: 1px solid #306aa2;
+  border-bottom: 1px solid #aaa;
 }
 
 .question-answers .answers-header h4 {
@@ -678,7 +756,7 @@ div.question-info .question-container .question-footer .edited {
 .answer {
   margin-top: 20px;
   min-height: 150px;
-  border-bottom: 1px solid #306aa2;
+  border-bottom: 1px solid #aaa;
 }
 
 .answer .vote-area .vote-counter.hundreds {
@@ -714,8 +792,68 @@ div.question-info .question-container .question-footer .edited {
   display:inline-block;
   width: 315px;
   padding-left: 5px;
-  border: 1px solid #306aa2;
+  border: 1px solid #aaa;
   border-right: 0;
+}
+
+
+/***********************************************************************
+ *
+ *                      WARNING SECTIONS
+ *
+ * 
+ ***********************************************************************/
+
+div.rogo-warning {
+  padding: 20px;
+}
+
+ .rogo-warning h3 {
+  color: #306aa2;
+  font-size: 30px;
+ }
+
+ .rogo-warning p {
+  font-size: 16px;
+ }
+
+ .rogo-warning p>a,
+ .rogo-warning p>a:hover {
+  color: #306aa2;
+ }
+
+
+
+
+/***********************************************************************
+ *
+ *                      FOOTER SECTION
+ *
+ * 
+ ***********************************************************************/
+
+
+footer {
+  background-color: #103d69;
+  height: 200px;
+}
+
+footer .container {
+  padding-top: 50px;
+  text-align: center;
+}
+
+footer .container ul {
+  list-style: none;
+}
+
+footer .container a {
+  text-decoration: none;
+  color: white;
+}
+
+footer .container a:hover {
+  text-decoration: underline;
 }
 
 

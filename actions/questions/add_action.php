@@ -5,30 +5,31 @@
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/questions.php');
 
-    function validateQuestionTitle($title) {
-        if(strlen($title) < 15) {
-            return false;
+    function returnIfHasErrors($errors) {
+        global $BASE_URL;
+        if($errors->hasErrors()) {
+            $_SESSION['s_error'] = $errors->getErrors();
+            $_SESSION['s_values'] = $_POST;
+            header("Location: $BASE_URL"."pages/questions/add.php");
+            exit;
         }
-        return true;
-    }
-
-    function validateQuestionDetails($details) {
-        if(strlen($details) < 30) {
-            return false;
-        }
-        return true;
     }
 
     if(isset($_SESSION['s_username'])) {
+
+        $errors = new DatabaseException();
+
         if(!isset($_POST['question'])) {
-            die('NO_QUESTION'); // TODO
+            $errors->addError('question', 'no_questions');
         }
         if(!isset($_POST['details'])) {
-            die('NO_DETAILS'); // TODO
+            $errors->addError('details', 'no_details');
         }
         if(!isset($_POST['tags'])) {
-            die('NO_TAGS'); // TODO 
+            $errors->addError('tags', 'no_tags');
         }
+
+        returnIfHasErrors($errors);
 
         $question = $_POST['question'];
         $details = $_POST['details'];
@@ -40,25 +41,22 @@
         }
 
         if(!validateQuestionTitle($question)) {
-            die('invalid_question');
+            $errors->addError('question', 'invalid');
         }
-        if(!validateQuestionDetails($details)){
-            die('invalid_question_details');
+        if(!validateQuestionDetails($details)) {
+            $errors->addError('details', 'invalid');
         }
 
+        returnIfHasErrors($errors);
+
         try {
-            $id = insertQuestion($question, $details, $anonymously);
+            $id = insertQuestion($question, $details, $anonymously, $tags);
             // redirects to question page
             header("Location: $BASE_URL"."pages/questions/view.php?id=".$id);
             exit;
         } catch (DatabaseException $e) {
-            $_SESSION['s_error'] = $e->getErrors();
-            $_SESSION['s_values'] = $_POST;
-            header("Location: $BASE_URL" . "pages/questions/add.php");
-            exit;
+            returnIfHasErrors($e);
         }
 
-    } else {
-        die('YOU_HAVE_TO_LOG_IN_TO_ASK_QUESTION'); // TODO not this way
     }
 ?>
