@@ -4,6 +4,7 @@
 
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/questions.php');
+    include_once($BASE_PATH . 'database/tags.php');
 
     function returnIfHasErrors($errors) {
         global $BASE_URL;
@@ -47,14 +48,46 @@
             $errors->addError('details', 'invalid');
         }
 
+        // validate tags?
+
         returnIfHasErrors($errors);
 
         try {
-            $id = insertQuestion($question, $details, $anonymously, $tags);
+            $db->beginTransaction();
+            $question_id = insertQuestion($question, $details, $anonymously);
+
+            $tags = explode(",", $tags);
+
+            // insert the tags
+            foreach($tags as $tagname) {
+
+                $tag = getTagByName($tagname);
+                if(!$tag) {
+                    try {
+
+                        $tag_id = insertTag($tag);
+
+                    } catch(Exception $e) {
+                        $db->rollBack();
+                    }
+                }
+                
+                    
+
+                // associate the tags with the question
+                try {
+
+                } catch(Exception $e) {
+                    $db->rollBack();
+                }
+            }
+
             // redirects to question page
-            header("Location: $BASE_URL"."pages/questions/view.php?id=".$id);
+            $db->commit();
+            header("Location: $BASE_URL"."pages/questions/view.php?id=".$question_id);
             exit;
         } catch (DatabaseException $e) {
+            $db->rollBack();
             returnIfHasErrors($e);
         }
 

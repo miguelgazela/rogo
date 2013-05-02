@@ -1,8 +1,9 @@
 <?php
     include_once($BASE_PATH . 'common/DatabaseException.php');
+    //include_once($BASE_PATH . 'database/tags.php');
 
-    function insertQuestion($title, $details, $anonymously, $tags) {
-        global $db;
+    function insertQuestion($title, $details, $anonymously) {
+        //global $db;
         $errors = new DatabaseException();
         $postid;
         $followableid;
@@ -20,13 +21,13 @@
 
         // insert a new post and get its id
         // TODO anonymously not taken in consideration yet
-        $db->beginTransaction();
+        //$db->beginTransaction();
         try {
             $stmt = $db->prepare("INSERT INTO post (title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, now(), now(), now(), 0, 0, ?, ?)");
             $stmt->execute(array($title, $details, $_SESSION['s_userid'], $_SESSION['s_userid']));
             $postid = $db->lastInsertId('post_postid_seq');
         } catch(Exception $e) {
-            $db->rollBack();
+            //$db->rollBack();
             $errors->addError('post', 'error processing insert into post table');
             throw ($errors);
         }
@@ -37,7 +38,7 @@
             $stmt->execute();
             $followableid = $db->lastInsertId('followable_followableid_seq');
         } catch (Exception $e) {
-            $db->rollBack();
+            //$db->rollBack();
             $errors->addError('followable', 'error processing insert into followable table');
             throw ($errors);
         }
@@ -47,11 +48,12 @@
             $stmt = $db->prepare("INSERT INTO question (questionid, followableid, viewcount, answercount) VALUES (?, ?, 0, 0)");
             $stmt->execute(array($postid, $followableid));
         } catch(Exception $e) {
-            $db->rollBack();
+            //$db->rollBack();
             $errors->addError('question', 'error processing insert into question table');
             throw ($errors);
         }
-        $db->commit();
+
+        //$db->commit();
         return $postid;
     }
 

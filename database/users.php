@@ -35,7 +35,7 @@
 
     function getUserInfoByLogin($login, $pass_hash) {
         global $db;
-        $response;
+        $response = array();
 
         $result = $db->prepare("SELECT permissiontype, userid FROM rogouser WHERE username = ? AND passhash = ?");
         $result->execute(array($login,$pass_hash));
