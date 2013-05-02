@@ -3,15 +3,15 @@
     //include_once($BASE_PATH . 'database/tags.php');
 
     function insertQuestion($title, $details, $anonymously) {
-        //global $db;
+        global $db;
         $errors = new DatabaseException();
         $postid;
         $followableid;
 
-        if(!validateQuestion($title)) {
+        if(!validateQuestionTitle($title)) {
             $errors->addError('question_title', 'insufficient_length');
         }
-        if(!validateDetails($details)) {
+        if(!validateQuestionDetails($details)) {
             $errors->addError('question_details', 'insufficient_length');
         }
 
@@ -89,16 +89,12 @@
         global $db;
 
         if(!is_numeric($id)) {
-            throw new Exception("INVALID_QUESTION_ID");
+            throw new Exception("invalid_id");
         }
 
         $stmt = $db->prepare("SELECT question.*, post.*, username, reputation FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND questionid = ?");
         $stmt->execute(array($id));
-        $question = $stmt->fetch();
-        if(!$question) {
-            throw new Exception("NO_SUCH_QUESTION_WITH_ID");
-        }
-        return $question;
+        return $stmt->fetch();
     }
 
     function validateQuestionTitle($title) {

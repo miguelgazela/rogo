@@ -49,42 +49,39 @@
         }
 
         // validate tags?
-
         returnIfHasErrors($errors);
 
         try {
             $db->beginTransaction();
-            $question_id = insertQuestion($question, $details, $anonymously);
-
+            $questionid = insertQuestion($question, $details, $anonymously);
             $tags = explode(",", $tags);
 
             // insert the tags
             foreach($tags as $tagname) {
 
                 $tag = getTagByName($tagname);
-                if(!$tag) {
+
+                if(!$tag) { // doesn't exist yet
                     try {
-
-                        $tag_id = insertTag($tag);
-
-                    } catch(Exception $e) {
+                        $tag['tagid'] = insertTag($tagname);
+                    } catch(DatabaseException $e) {
                         $db->rollBack();
+                        returnIfHasErrors($e);
                     }
                 }
-                
-                    
 
                 // associate the tags with the question
                 try {
-
-                } catch(Exception $e) {
+                    addTagToQuestion($questionid, $tag['tagid']);
+                } catch(DatabaseException $e) {
                     $db->rollBack();
+                    returnIfHasErrors($e);
                 }
             }
 
             // redirects to question page
             $db->commit();
-            header("Location: $BASE_URL"."pages/questions/view.php?id=".$question_id);
+            header("Location: $BASE_URL"."pages/questions/view.php?id=".$questionid);
             exit;
         } catch (DatabaseException $e) {
             $db->rollBack();

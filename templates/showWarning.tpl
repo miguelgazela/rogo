@@ -8,7 +8,7 @@
 
         <div class="container rogo-warning">
             <h3><i class="icon-info-sign"></i> Ups...</h3>
-            <p>You have to <a href="{$BASE_URL}pages/auth/signin.php">log in</a> to get access</p>
+            <p>{$warning_msg}</p>
         </div>
 
         {include file="footer.tpl"}

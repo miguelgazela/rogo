@@ -6,20 +6,24 @@
     include_once($BASE_PATH . 'database/questions.php');    
     include_once($BASE_PATH . 'database/answers.php');    
     include_once($BASE_PATH . 'database/comments.php');
+    include_once($BASE_PATH . 'database/tags.php');
 
     $id = $_GET['id'];
 
     // fetch data
     try {
         $question = getQuestionById($id);
+        if(!$question) {
+            $smarty->assign('warning_msg', "We don't have any question with that id");
+            $smarty->display("showWarning.tpl");
+        }
     } catch(Exception $e) {
-        $_SESSION['s_error']['global'] = $e->getMessage();
-        header("Location: $BASE_URL"."index.php");
+        $smarty->assign('warning_msg', "He need a valid question id to show you something useful");
+        $smarty->display("showWarning.tpl");
     }
 
-    // send data to smarty
+    // send data to smarty and display template
+    $smarty->assign('tags',getTagsOfQuestion($id));
     $smarty->assign('question', $question);
-
-    // display smarty template
     $smarty->display("questions/view.tpl");
 ?>

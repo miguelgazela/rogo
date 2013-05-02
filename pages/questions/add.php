@@ -6,6 +6,7 @@
     if(isset($_SESSION['s_username'])) {
         $smarty->display('questions/add.tpl');
     } else {
-        $smarty->display('haveToLogin.tpl');
+        $smarty->assign('warning_msg', "You have to <a href='{$BASE_URL}pages/auth/signin.php'>log in</a> to get access");
+        $smarty->display('showWarning.tpl');
     }
 ?>

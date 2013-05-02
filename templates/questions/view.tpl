@@ -23,11 +23,10 @@
                         </div>
                         <div class="question-container">
                             <p class="question-body">{$question.body}</p>
-                            <!-- the tags are temporary, no time to implement in prototype -->
                             <div class="tags">
-                                <a href="#" class="post-tag">java</a>
-                                <a href="#" class="post-tag">python</a>
-                                <a href="#" class="post-tag">json</a>
+                                {foreach $tags as $tag}
+                                <a href="#" class="post-tag">{$tag.tagname}</a>
+                                {/foreach}
                             </div>
                             <div class="question-footer">
                                 <div class="started">
