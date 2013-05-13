@@ -8,4 +8,10 @@
     require_once('database.php');
     require_once('session.php');
     require_once('smarty.php');
+
+    function returnErrorJSON($response, $errorCode, $errorMessage) {
+        $response['errorCode'] = $errorCode;
+        $response['errorMessage'] = $errorMessage;
+        die(json_encode($response));
+    }
 ?>

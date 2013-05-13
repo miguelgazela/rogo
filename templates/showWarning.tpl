@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    {include file="header.tpl" title="Rogo - Ups, you have to login"}
+    {include file="header.tpl" title="Rogo - Ups, you found an error"}
 
     <body>
 

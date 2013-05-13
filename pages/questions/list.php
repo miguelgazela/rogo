@@ -5,10 +5,7 @@
     // include needed database functions
     include_once($BASE_PATH . 'database/questions.php');
 
-    if(!isset($_GET['sort'])) {
-        $_GET['sort'] = "newest";
-    }
-    if(!validSorting($_GET['sort'])) {
+    if(!isset($_GET['sort']) || !validSorting($_GET['sort'])) {
         $_GET['sort'] = "newest";
     }
 

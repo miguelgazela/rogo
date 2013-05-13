@@ -55,7 +55,8 @@
         <!-- Placed at the end of the document so the pages load faster -->
         {include file="../common-js.tpl"}
         <script>
-            $("#signin_form").submit(function() {
+            $("#signin_form").submit(function(event) {
+                event.preventDefault();
                 return (validateUsername() && validatePassword());
             })
         </script>

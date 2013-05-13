@@ -1,5 +1,6 @@
 var BASE_URL = "http://gnomo.fe.up.pt/~lbaw12201/rogo/";
 var SPACE_KEY = 32;
+var ENTER_KEY = 13;
 
 $(document).ready(function() {
     console.log("JQuery working");

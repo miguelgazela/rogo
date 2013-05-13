@@ -29,15 +29,11 @@
                         <div class="control-group inputQuestionTags">
                             <label class="control-label" for="inputQuestionTags">Tags</label>
                             <div class="controls">
-                                <input type="text" autocomplete="off" name="tags" id="inputQuestionTags" onblur="return validateTags()" value="" placeholder="at least one tag, max 5 tags">
+                                <input type="text" autocomplete="off" name="tags" id="inputQuestionTags" onblur="return validateTags()" value="" placeholder="at least one tag, max 5 tags, separate with spaces">
                             </div>
                             <span class="help-block"></span>
                         </div>
                         <div class="tags_container"></div>
-                        <label class="checkbox">
-                            <input type="checkbox" value="" name="anonymously">
-                            Add Anonymously
-                        </label>
                     </form>
                     <button type="submit" form="ask_question_form" class="btn">Add Question</button>
                 </div>
@@ -94,19 +90,22 @@
                 }
             })
 
-            $("#ask_question_form").submit(function() {
+            $("#ask_question_form").submit(function(event) {
+                event.preventDefault();
+
                 if(validateQuestion() && validateQuestionDetails() && validateTags()) {
                     var tags = "";
                     // add each tag to a comma separated list
                     $("a.post-tag").each(function(index) {
+                        var tag = $(this).text();
+                        tag = tag.substr(0, tag.length-1);
                         if(index == 0) {
-                            var tag = $(this).text();
-                            tag = tag.substr(0, tag.length-1);
                             tags += tag;
                         } else {
-                            tags += ("," + $(this).text());
+                            tags += (","+tag);
                         }
                     });
+                    console.log(tags); // TODO REMOVE
                     $('#inputQuestionTags').val(tags);
                     return true;
                 }

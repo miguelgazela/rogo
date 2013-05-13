@@ -35,11 +35,6 @@
         $question = $_POST['question'];
         $details = $_POST['details'];
         $tags = $_POST['tags'];
-        $anonymously = false;
-
-        if(isset($_POST['anonymously'])) {
-            $anonymously = true;
-        }
 
         if(!validateQuestionTitle($question)) {
             $errors->addError('question', 'invalid');
@@ -48,12 +43,12 @@
             $errors->addError('details', 'invalid');
         }
 
-        // validate tags?
+        // validate tags
         returnIfHasErrors($errors);
 
         try {
             $db->beginTransaction();
-            $questionid = insertQuestion($question, $details, $anonymously);
+            $questionid = insertQuestion($question, $details);
             $tags = explode(",", $tags);
 
             // insert the tags

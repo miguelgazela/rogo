@@ -31,15 +31,27 @@
                                     </div>
                                 </div>
                                 <div class="question-stats pull-right">
-                                    <div class="stats-answers answered">
+                                    {if $question.answercount > 0}
+                                        <div class="stats-answers answered">
+                                    {else}
+                                        <div class="stats-answers">
+                                    {/if}
                                         <span class="stat-number">{$question.answercount}</span>
                                         <span class="stat-description">answers</span>
                                     </div>
-                                    <div class="stats-votes voted">
+                                    {if $question.score > 0}
+                                        <div class="stats-votes voted">
+                                    {else}
+                                        <div class="stats-votes">
+                                    {/if}
                                         <span class="stat-number">{$question.score}</span>
                                         <span class="stat-description">votes</span>
                                     </div>
-                                    <div class="stats-views viewed">
+                                    {if $question.viewcount > 0}
+                                        <div class="stats-views answered">
+                                    {else}
+                                        <div class="stats-views">
+                                    {/if}
                                         <span class="stat-number">{$question.viewcount}</span>
                                         <span class="stat-description">views</span>
                                     </div>

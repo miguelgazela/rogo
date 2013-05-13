@@ -2,6 +2,10 @@ body {
   padding-top: 40px;
 }
 
+.hide {
+  display: none;
+}
+
 /* change this to account for phones, tablets, etc... */
 @media all and (min-width: 768px) and (max-width: 979px) { 
 
@@ -286,7 +290,7 @@ a.post-tag:hover {
   text-decoration: none;
 }
 
-.started span.action-time {
+span.action-time {
   color: #bbb;
   font-size: 12px;
 }
@@ -404,14 +408,6 @@ a.post-tag:hover {
   margin-bottom: 4px;
   font-size: 12px;
   color: #a6a6a6;
-}
-
-.sidebar-content .join-rogo-ad {
-  width: 220px;
-  text-align: justify;
-  margin-top: 10px;
-  padding: 5px;
-  border-top: 1px solid #eaeaea;
 }
 
 /***********************************************************************
@@ -656,7 +652,7 @@ form#ask_question_form div.tags_container a.post-tag i:hover{
 
 div.question-header {
   border-bottom: 1px solid #eaeaea;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 div.question-header h3 {
@@ -715,7 +711,7 @@ div.question-info .question-container .question-footer .edited {
 }
 
 .vote-area {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .vote-area span {
@@ -724,21 +720,38 @@ div.question-info .question-container .question-footer .edited {
 }
 
 .vote-area span.vote-up,
+.vote-area span.vote-down {
+  border: 15px solid white;
+  width: 0;
+  margin-left: 9px;
+}
+
+.vote-area span.vote-up {
+  border-bottom-color: #306aa2;
+  margin-bottom: 5px;
+}
+
+.vote-area span.vote-down {
+  border-top-color: #306aa2;
+  margin-top: 5px;
+}
+
+.vote-area span.vote-up,
 .vote-area span.vote-down,
 .vote-area span.accept-answer {
   cursor: pointer;
 }
 
-.vote-area span.active {
-  color: #faac3c;
+.vote-area span.vote-up.active {
+  border-bottom-color: #faac3c;
+}
+
+.vote-area span.vote-down.active {
+  border-top-color: #faac3c;
 }
 
 .vote-area .vote-counter {
-  font-size: 30px;
-}
-
-.vote-area .vote-counter.large-number { 
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .answers-container {
@@ -750,30 +763,31 @@ div.question-info .question-container .question-footer .edited {
 }
 
 .answers-container .answer .answer-container {
-  margin-left: 50px;
+  margin-left: 55px;
 }
 
 .answer {
   margin-top: 20px;
   min-height: 150px;
   border-bottom: 1px solid #aaa;
+  padding-bottom: 20px;
 }
 
-.answer .vote-area .vote-counter.hundreds {
-  font-size: 22px;
+.answer .vote-area {
+  width: 44px;
+}
+
+.answer .vote-area span.vote-up,
+.answer .vote-area span.vote-down {
+  margin-left: 7px;
 }
 
 .answer .vote-area .accept-answer {
   color: #ddd;
-  margin-top: 5px;
 }
 
 .answer .vote-area .accept-answer.accepted {
   color: #faac3c;
-}
-
-.answer .vote-area .vote-counter.thousands {
-  font-size: 18px;
 }
 
 .answers-container .answer p.answer-body {
@@ -796,6 +810,97 @@ div.question-info .question-container .question-footer .edited {
   border-right: 0;
 }
 
+#add_answer_form .control-group textarea {
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+  resize: vertical;
+  width: 640px;
+}
+
+#add_answer_form > button.btn {
+  color: #fff;
+  width: 150px;
+  margin-top: 10px;
+  background-color: #306aa2;
+  background-image: none;
+  text-shadow: none;
+  border: 0;
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  -webkit-transition: all 0.2s linear;
+     -moz-transition: all 0.2s linear;
+       -o-transition: all 0.2s linear;
+          transition: all 0.2s linear;
+}
+
+#add_answer_form > button.btn:hover {
+  background-color: #103d69;
+}
+
+.comments {
+  margin-top: 20px;
+}
+
+.comments .comment {
+  border-top: 1px dotted #ccc;
+  padding: 5px;
+  font-size: 13px;
+}
+
+.comments .comment:first-child {
+  border-top: 1px dotted #aaa;
+}
+
+.comments .comment:hover {
+  background-color: #efefef;
+}
+
+.comments div.comment:last-of-type {
+  border-bottom: 1px dotted #ccc;
+}
+
+.comments form.add_comment_form {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+form.add_comment_form textarea.inputComment {
+  resize: vertical;
+  font-size: 13px;
+  width: 460px;
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+form.add_comment_form .inputComment {
+  display: inline-block;
+}
+
+a.showMore {
+  color: #306AA2;
+  font-size: 12px;
+  padding-top: 5px;
+}
+
+/***********************************************************************
+ *
+ *                      PRIVATE MESSAGES SECTIONS
+ *
+ * 
+ ***********************************************************************/
+
+h3.inbox-header {
+  border-bottom: 1px solid #aaa;
+}
 
 /***********************************************************************
  *

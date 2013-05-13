@@ -1,6 +1,56 @@
 <?php
     // initialize
     include_once('../../common/init.php');
+    include_once($BASE_PATH . 'common/DatabaseException.php');
 
-    $_SESSION['s_error']['global'] = "Not implemented yet";
+    function insertComment($postid, $text) {
+        global $db;
+        $errors = new DatabaseException();
+        $commentId;
+
+        if(!validateCommentText($text)) {
+            $errors->addError('comment_body', 'insufficient_length');
+        }
+        if($errors->hasErrors()) {
+            throw ($errors);
+        }
+
+        $db->beginTransaction();
+        // insert a new notifiable and get its id
+        try {
+            $stmt = $db->prepare("INSERT INTO notifiable (type) VALUES (3)");
+            $stmt->execute();
+            $commentId = $db->lastInsertId('notifiable_notifiableid_seq');
+        } catch (Exception $e) {
+            $db->rollBack();
+            $errors->addError('notifiable', 'error processing insert into notifiable table');
+            throw ($errors);
+        }
+
+        // insert the new comment
+        try {
+            $stmt = $db->prepare("INSERT INTO comment (commentid, creationdate, body, score, ownerid, postid) VALUES (?, now(), ?, 0, ?, ?)");
+            $stmt->execute(array($commentId, $text, $_SESSION['s_user_id'], $postid));
+        } catch(Exception $e) {
+            $db->rollBack();
+            $errors->addError('comment', 'error processing insert into comment table');
+            throw ($errors);
+        }
+        $db->commit();
+        return $commentId;
+    }
+
+    function getCommentsOfPost($postid) {
+        global $db;
+        $result = $db->prepare("SELECT comment.*, username FROM comment, rogouser WHERE comment.postid = ? AND userid = ownerid");
+        $result->execute(array($postid));
+        return $result->fetchAll();
+    }
+
+    function validateCommentText($text) {
+        if(strlen($text) < 15) {
+            return false;
+        }
+        return true;
+    }
 ?>

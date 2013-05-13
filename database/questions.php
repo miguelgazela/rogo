@@ -1,6 +1,5 @@
 <?php
     include_once($BASE_PATH . 'common/DatabaseException.php');
-    //include_once($BASE_PATH . 'database/tags.php');
 
     function insertQuestion($title, $details, $anonymously) {
         global $db;
@@ -20,14 +19,11 @@
         }
 
         // insert a new post and get its id
-        // TODO anonymously not taken in consideration yet
-        //$db->beginTransaction();
         try {
             $stmt = $db->prepare("INSERT INTO post (title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, now(), now(), now(), 0, 0, ?, ?)");
-            $stmt->execute(array($title, $details, $_SESSION['s_userid'], $_SESSION['s_userid']));
+            $stmt->execute(array($title, $details, $_SESSION['s_user_id'], $_SESSION['s_user_id']));
             $postid = $db->lastInsertId('post_postid_seq');
         } catch(Exception $e) {
-            //$db->rollBack();
             $errors->addError('post', 'error processing insert into post table');
             throw ($errors);
         }
@@ -38,7 +34,6 @@
             $stmt->execute();
             $followableid = $db->lastInsertId('followable_followableid_seq');
         } catch (Exception $e) {
-            //$db->rollBack();
             $errors->addError('followable', 'error processing insert into followable table');
             throw ($errors);
         }
@@ -48,12 +43,9 @@
             $stmt = $db->prepare("INSERT INTO question (questionid, followableid, viewcount, answercount) VALUES (?, ?, 0, 0)");
             $stmt->execute(array($postid, $followableid));
         } catch(Exception $e) {
-            //$db->rollBack();
             $errors->addError('question', 'error processing insert into question table');
             throw ($errors);
         }
-
-        //$db->commit();
         return $postid;
     }
 
@@ -87,7 +79,6 @@
 
     function getQuestionById($id) {
         global $db;
-
         if(!is_numeric($id)) {
             throw new Exception("invalid_id");
         }
@@ -96,6 +87,18 @@
         $stmt->execute(array($id));
         return $stmt->fetch();
     }
+
+    function incQuestionViews($id) {
+        global $db;
+        if(!is_numeric($id)) {
+            throw new Exception("invalid_id");
+        }
+
+        $stmt = $db->prepare("UPDATE question SET viewcount = (SELECT viewcount FROM question WHERE questionid = ?) + 1 WHERE questionid = ?");
+        $stmt->execute(array($id, $id));
+    }
+
+    /* HELPER FUNCTIONS */
 
     function validateQuestionTitle($title) {
         if(strlen($title) < 15) {
