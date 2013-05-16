@@ -33,7 +33,6 @@ $(document).ready(function() {
     // define the remove action for answers
     $(".remove-answer").click(function(e){
         var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
-        console.log("HERE!");
         $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
             console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
@@ -129,8 +128,8 @@ $(document).ready(function() {
                 $.post(BASE_URL+"ajax/comments/add.php", {id: postid, text: comment}, function(response){
                     //console.log(response); // TODO remove
                     if(response.requestStatus == "OK") {
-                        var newComment = "<div class='comment' id='comment-'"+response.commentId+">"+response.commentText;
-                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.commentOwnerId+"' class='username'>"+response.commentOwnerUsername+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span></div>";
+                        var newComment = "<div class='comment' id='comment-'"+response.data.commentId+">"+response.data.commentText;
+                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span></div>";
                         inputCommentCtrl.parent("form").before(newComment);
                         $("#comments-"+postid+" textarea").val("");
                     } else {
@@ -192,15 +191,15 @@ function addAnswer(questionID) {
         $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle}, function(response) {
             console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
-                var answer = "<div class='answer' id='"+response.answerID+"'>";
+                var answer = "<div class='answer' id='"+response.data.answerID+"'>";
                 answer += "<div class='vote-area pull-left'><span class='vote-up'></span>";
                 answer += "<span class='vote-counter text-center'>0</span>";
                 answer += "<span class='vote-down'></span>";
                 answer += "<span class='accept-answer' text-center accepted'><i class='icon-ok-circle icon-2x'></i></span></div>";
-                answer += "<div class='answer-container'><p class='answer-body'>"+response.answerText+"</p>";
+                answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
                 answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
-                answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.userid+"' class='username'>"+response.username+"</a>";
-                answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.reputation+"</span></div></div></div>";
+                answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
+                answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.data.reputation+"</span></div></div></div>";
                 $("div.answers-container").append(answer);
 
                 $("#inputAnswer").val(""); // clear textarea

@@ -20,6 +20,19 @@
             $response['errors'] = func_get_arg(3);
         }
         die(json_encode($response));
+    }
 
+    function returnOkJSON() {
+        if(func_num_args() < 2 && func_num_args() > 3) {
+            throw new Exception("returnErrorJSON: invalid number of arguments");
+        }
+        $response = func_get_arg(0);
+        $response['errorCode'] = -1;
+        $response['errorMessage'] = func_get_arg(1);
+
+        if(func_num_args() == 3) {
+            $response['data'] = func_get_arg(2);
+        }
+        die(json_encode($response));
     }
 ?>

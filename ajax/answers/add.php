@@ -39,14 +39,8 @@
             updLastActivityDate($id);
             $db->commit();
 
-            $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
-            $response['answerId'] = $answerid;
-            $response['username'] = $_SESSION['s_username'];
-            $response['userid'] = $_SESSION['s_user_id'];
-            $response['answerText'] = $text;
-            $response['reputation'] = $_SESSION['s_reputation'];
-            die(json_encode($response));
+            returnOkJSON($response, "Answer was added to database", array("answerId" => $answerid, "answerText" => $text, "username" => $_SESSION['s_username'], "userid" => $_SESSION['s_user_id'], "reputation" => $_SESSION['s_reputation']));
         } catch(DatabaseException $e) {
             $db->rollBack();
             returnErrorJSON($response, 7, "Error inserting answer into database", $e->getErrors());

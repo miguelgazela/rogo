@@ -11,10 +11,10 @@
 
     if ($userInfo['result'] == "OK") {
         $_SESSION['s_username'] = $username;
-        $_SESSION['s_user_permission'] = $userInfo['permissiontype'];
-        $_SESSION['s_user_id'] = $userInfo['userid'];
+        $_SESSION['s_user_permission'] = $userInfo['user']['permissiontype'];
+        $_SESSION['s_user_id'] = $userInfo['user']['userid'];
         $_SESSION['s_ok'] = "Login Ok";
-        $_SESSION['s_reputation'] = $userInfo['reputation'];
+        $_SESSION['s_reputation'] = $userInfo['user']['reputation'];
         header("Location: $BASE_URL"."index.php");
         exit;
     } else {

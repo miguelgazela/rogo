@@ -32,14 +32,9 @@
             updLastActivityDate($postid);
             $db->commit();
 
-            $response['errorCode'] = -1;
-            $response['requestStatus'] = "OK";
-            $response['commentId'] = $commentid;
-            $response['commentText'] = $text;
-            $response['commentOwnerUsername'] = $_SESSION['s_username'];
-            $response['commentOwnerId'] = $_SESSION['s_user_id'];
             
-            die(json_encode($response));
+            $response['requestStatus'] = "OK";
+            returnOkJSON($response, "Comment was added to database", array("commentId" => $commentid, "commentText" => $text, "username" => $_SESSION['s_username'], "userid" => $_SESSION['s_user_id']));
         } catch(DatabaseException $e) {
             $db->rollBack();
             returnErrorJSON($response, 6, "Error inserting answer into database");

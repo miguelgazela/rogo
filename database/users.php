@@ -44,11 +44,13 @@
         $user = $result->fetch();
 
         if($user) {
-            var_dump($user);
             $response['result'] = 'OK';
+            $response['user'] = $user;
+            /*
             $response['userid'] = $user['userid'];
             $response['permissiontype'] = $user['permissiontype'];
             $response['reputation'] = $user['reputation'];
+            */
         } else {
             $response['result'] = 'NOK';
         }
