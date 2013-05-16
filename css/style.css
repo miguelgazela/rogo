@@ -300,11 +300,11 @@ span.action-time {
   margin-left: 10px;
 }
 
-.started div.user-info > a.username {
+a.username {
   color: #306aa2;
 }
 
-.started div.user-info > a.username:hover {
+a.username:hover {
   color: #306aa2;
 }
 
@@ -738,8 +738,20 @@ div.question-info .question-container .question-footer .edited {
 
 .vote-area span.vote-up,
 .vote-area span.vote-down,
-.vote-area span.accept-answer {
+.vote-area span.accept-answer,
+.vote-area span.remove-answer,
+.vote-area span.edit-answer {
   cursor: pointer;
+}
+
+.vote-area span.remove-answer,
+.vote-area span.edit-answer {
+  margin-top: 5px;
+}
+
+.vote-area span.remove-answer:hover,
+.vote-area span.edit-answer:hover {
+  color: #103d69;
 }
 
 .vote-area span.vote-up.active {
@@ -869,6 +881,19 @@ div.question-info .question-container .question-footer .edited {
   margin-bottom: 10px;
 }
 
+.comment i {
+  color: #306aa2;
+  visibility: hidden;
+}
+
+.comment:hover i{
+  visibility: visible;
+}
+
+.comment i:hover {
+  cursor: pointer;
+}
+
 form.add_comment_form textarea.inputComment {
   resize: vertical;
   font-size: 13px;
@@ -900,6 +925,105 @@ a.showMore {
 
 h3.inbox-header {
   border-bottom: 1px solid #aaa;
+  margin-top: 0;
+  line-height: 30px;
+}
+
+span.badge.unread {
+  background-color: #306aa2;
+  position: relative;
+  top: -3px;
+}
+
+.priv_messages {
+  margin-top: 20px;
+}
+
+.priv_message {
+  border-bottom: 1px solid #ddd;
+  height: 50px;
+}
+
+.priv_message.unread {
+  background-color: #feddae;
+}
+
+.priv_message > * {
+  margin-top: 5px;
+}
+
+.priv_message:hover {
+  background-color: #eee;
+}
+
+.priv_message > div {
+  margin-left: 5px;
+  height: 40px;
+  display: inline-block;
+}
+
+.priv_message img.media-object {
+  width: 40px;
+  height: 40px;
+}
+
+.priv_message_info_1 {
+  width: 170px;
+}
+
+.priv_message_info_1 span.action-time {
+  display: block;
+}
+
+.priv_message_info_2 {
+  width: 375px;
+}
+
+.priv_message_actions {
+  width: 100px;
+  visibility: hidden;
+}
+
+.priv_message_actions div {
+  width: 45px;
+  background-color: #306aa2;
+  height: 30px;
+  padding: 5px 0px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+}
+
+.priv_message_actions div:hover {
+  cursor: pointer;
+  background-color: #103d69;
+}
+
+.priv_message_actions div > * {
+  display: block;
+  font-size: 13px;
+}
+
+.priv_message_actions div.remove > i {
+  
+}
+
+.priv_message:hover > .priv_message_actions {
+  visibility: visible;
+}
+
+a.subject {
+  color: #306aa2;
+}
+
+a.subject:hover {
+  color: #306aa2;
+}
+
+span.message-excerpt {
+  color: #bbb;
+  font-size: 12px;
+  display: block;
 }
 
 /***********************************************************************

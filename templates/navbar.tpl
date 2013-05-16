@@ -12,7 +12,21 @@
                         <li class="_signin"><a href="{$BASE_URL}pages/auth/signin.php"><i class="icon-signin"></i> Log in</a></li>
                         <li class="_signup"><a href="{$BASE_URL}pages/auth/signup.php"><i class="icon-plus"></i> Sign up</a></li>
                     {else}
-                        <li><a href="{$BASE_URL}actions/auth/logout.php"><i class="icon-signout"></i> Sign out</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-user"></i> {$s_username}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{$BASE_URL}pages/questions/add.php">Add Question</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Messages</a></li>
+                                <li><a href="#">Drafts</a></li>
+                                <li><a href="#">Notifications</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{$BASE_URL}actions/auth/logout.php">Logout</a></li>
+                            </ul>
+                        </li>
                     {/if}
                     
                 </ul>

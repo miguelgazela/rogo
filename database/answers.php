@@ -15,15 +15,24 @@
             throw ($errors);
         }
 
-        $db->beginTransaction();
-        // insert a new post and get its id
+        // insert a new notifiable and get its id
         try {
-            $stmt = $db->prepare("INSERT INTO post (title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, now(), now(), now(), 0, 0, ?, ?)");
-            $stmt->execute(array($title, $text, $_SESSION['s_user_id'], $_SESSION['s_user_id']));
-            $postid = $db->lastInsertId('post_postid_seq');
+            $stmt = $db->prepare("INSERT INTO notifiable (type) VALUES (1)");
+            $stmt->execute();
+            $postid = $db->lastInsertId('notifiable_notifiableid_seq');
+        } catch (Exception $e) {
+            $errors->addError('notifiable', 'error processing insert into notifiable table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+
+        // insert the new post
+        try {
+            $stmt = $db->prepare("INSERT INTO post (postid, title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, ?, now(), now(), now(), 0, 0, ?, ?)");
+            $stmt->execute(array($postid, $title, $text, $_SESSION['s_user_id'], $_SESSION['s_user_id']));
         } catch(Exception $e) {
-            $db->rollBack();
             $errors->addError('post', 'error processing insert into post table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
 
@@ -32,21 +41,59 @@
             $stmt = $db->prepare("INSERT INTO answer (answerid, questionid) VALUES (?, ?)");
             $stmt->execute(array($postid, $questionid));
         } catch(Exception $e) {
-            $db->rollBack();
             $errors->addError('question', 'error processing insert into question table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
-        $db->commit();
         return $postid;
     }
 
     function getAnswersOfQuestion($questionid) {
         global $db;
-        $result = $db->prepare("SELECT post.*, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid");
+        $result = $db->prepare("SELECT post.*, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid ORDER BY score DESC, lastactivitydate DESC");
         $result->execute(array($questionid));
         return $result->fetchAll();
     }
 
+    function removeAnswer($answerid) {
+        global $db;
+        $errors = new DatabaseException();
+
+        $db->beginTransaction();
+
+        // delete answer
+        try {
+            $stmt = $db->prepare("DELETE FROM answer WHERE answerid = ?");
+            $stmt->execute(array($answerid));
+        } catch(Exception $e) {
+            $db->rollBack();
+            $errors->addError('vote', 'error processing delete from answer table');
+            throw ($errors);
+        }
+
+        // delete post
+        try {
+            $stmt = $db->prepare("DELETE FROM post WHERE postid = ? AND ownerid = ? AND commentcount = 0"); // TODO doesn't check if user has extra permission
+            $stmt->execute(array($answerid, $_SESSION['s_user_id']));
+        } catch(Exception $e) {
+            $db->rollBack();
+            $errors->addError('notifiable', 'error processing delete from post table');
+            throw ($errors);
+        }
+        
+
+        // delete notifiable
+        try {
+            $stmt = $db->prepare("DELETE FROM notifiable WHERE notifiableid = ?");
+            $stmt->execute(array($answerid));
+        } catch(Exception $e) {
+            $db->rollBack();
+            $errors->addError('notifiable', 'error processing delete from notifiable table');
+            throw ($errors);
+        }
+
+        $db->commit();
+    }
 
     /* HELPER FUNCTIONS */
 

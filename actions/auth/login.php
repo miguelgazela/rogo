@@ -14,6 +14,7 @@
         $_SESSION['s_user_permission'] = $userInfo['permissiontype'];
         $_SESSION['s_user_id'] = $userInfo['userid'];
         $_SESSION['s_ok'] = "Login Ok";
+        $_SESSION['s_reputation'] = $userInfo['reputation'];
         header("Location: $BASE_URL"."index.php");
         exit;
     } else {

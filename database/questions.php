@@ -1,11 +1,11 @@
 <?php
     include_once($BASE_PATH . 'common/DatabaseException.php');
 
-    function insertQuestion($title, $details, $anonymously) {
+    function insertQuestion($title, $details) {
         global $db;
         $errors = new DatabaseException();
-        $postid;
-        $followableid;
+        $postId;
+        $followableId;
 
         if(!validateQuestionTitle($title)) {
             $errors->addError('question_title', 'insufficient_length');
@@ -18,13 +18,24 @@
             throw ($errors);
         }
 
-        // insert a new post and get its id
+        // insert a new notifiable and get its id
         try {
-            $stmt = $db->prepare("INSERT INTO post (title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, now(), now(), now(), 0, 0, ?, ?)");
-            $stmt->execute(array($title, $details, $_SESSION['s_user_id'], $_SESSION['s_user_id']));
-            $postid = $db->lastInsertId('post_postid_seq');
+            $stmt = $db->prepare("INSERT INTO notifiable (type) VALUES (1)");
+            $stmt->execute();
+            $postId = $db->lastInsertId('notifiable_notifiableid_seq');
+        } catch (Exception $e) {
+            $errors->addError('notifiable', 'error processing insert into notifiable table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+
+        // insert the new post
+        try {
+            $stmt = $db->prepare("INSERT INTO post (postid, title, body, creationdate, lastactivitydate, lasteditdate, commentcount, score, lasteditorid, ownerid) VALUES (?, ?, ?, now(), now(), now(), 0, 0, ?, ?)");
+            $stmt->execute(array($postId, $title, $details, $_SESSION['s_user_id'], $_SESSION['s_user_id']));
         } catch(Exception $e) {
             $errors->addError('post', 'error processing insert into post table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
 
@@ -32,49 +43,49 @@
         try {
             $stmt = $db->prepare("INSERT INTO followable (type) VALUES (2)");
             $stmt->execute();
-            $followableid = $db->lastInsertId('followable_followableid_seq');
+            $followableId = $db->lastInsertId('followable_followableid_seq');
         } catch (Exception $e) {
             $errors->addError('followable', 'error processing insert into followable table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
 
         // insert the new question
         try {
             $stmt = $db->prepare("INSERT INTO question (questionid, followableid, viewcount, answercount) VALUES (?, ?, 0, 0)");
-            $stmt->execute(array($postid, $followableid));
+            $stmt->execute(array($postId, $followableId));
         } catch(Exception $e) {
             $errors->addError('question', 'error processing insert into question table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
-        return $postid;
+        return $postId;
     }
 
     function getQuestionsWithSorting($sort) {
         global $db;
+        $query = "SELECT question.*, post.*, username, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ";
 
-        $result = $db->query("SELECT question.*, post.*, username, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ORDER BY post.creationdate DESC");
-
-        return $result->fetchAll();
-
-        /*
         switch ($sort) {
             case 'newest':
-                # code...
+                $query = $query."ORDER BY post.creationdate DESC";
                 break;
             case 'votes':
-                # code
+                $query = $query."ORDER BY post.score DESC";
                 break;
             case 'active':
-                # code
+                $query = $query."ORDER BY post.lastactivitydate DESC";
                 break;
             case 'unanswered':
-                # code
+                $query = $query."AND answercount = 0 ORDER BY creationdate DESC;";
                 break;
             default:
                 throw new Exception("getQuestionsWithSorting: Invalid sorting");
                 break;
         }
-        */
+        
+        $result = $db->query($query);
+        return $result->fetchAll();
     }
 
     function getQuestionById($id) {
@@ -90,12 +101,39 @@
 
     function incQuestionViews($id) {
         global $db;
+        $errors = new DatabaseException();
+
         if(!is_numeric($id)) {
             throw new Exception("invalid_id");
         }
 
-        $stmt = $db->prepare("UPDATE question SET viewcount = (SELECT viewcount FROM question WHERE questionid = ?) + 1 WHERE questionid = ?");
-        $stmt->execute(array($id, $id));
+        try {
+            $stmt = $db->prepare("UPDATE question SET viewcount = (SELECT viewcount FROM question WHERE questionid = ?) + 1 WHERE questionid = ?");
+            $stmt->execute(array($id, $id));
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing update on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function updLastActivityDate($postid) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($postid)) {
+            $errors->addError('updLastActivityDate', 'invalid post id');
+            throw ($errors);
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE post SET lastactivitydate = now() WHERE postid = ?");
+            $stmt->execute(array($postid));
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing update on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
     }
 
     /* HELPER FUNCTIONS */

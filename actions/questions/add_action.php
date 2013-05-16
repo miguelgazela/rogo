@@ -1,7 +1,6 @@
 <?php
     // initialize
     include_once('../../common/init.php');
-
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/questions.php');
     include_once($BASE_PATH . 'database/tags.php');
@@ -82,6 +81,5 @@
             $db->rollBack();
             returnIfHasErrors($e);
         }
-
     }
 ?>

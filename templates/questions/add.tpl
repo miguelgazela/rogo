@@ -15,14 +15,14 @@
                         <div class="control-group inputQuestionTitle">
                             <label class="control-label" for="inputQuestionTitle">Title</label>
                             <div class="controls">
-                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific.">
+                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific." value="{$s_values.question}">
                             </div>
                             <span class="help-block"></span>
                         </div>
                         <div class="control-group inputQuestionDetails">
                             <label class="control-label" for="inputQuestionDetails">Details</label>
                             <div class="controls">
-                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetails()"></textarea>
+                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetails()">{$s_values.details}</textarea>
                             </div>
                             <span class="help-block"></span>
                         </div>
@@ -91,8 +91,8 @@
             })
 
             $("#ask_question_form").submit(function(event) {
-                event.preventDefault();
 
+                //event.preventDefault();
                 if(validateQuestion() && validateQuestionDetails() && validateTags()) {
                     var tags = "";
                     // add each tag to a comma separated list
@@ -105,7 +105,6 @@
                             tags += (","+tag);
                         }
                     });
-                    console.log(tags); // TODO REMOVE
                     $('#inputQuestionTags').val(tags);
                     return true;
                 }

@@ -10,10 +10,10 @@
             <div class="row">
                 <div class="span9">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#">newest</a></li>
-                        <li><a href="#">votes</a></li>
-                        <li><a href="#">active</a></li>
-                        <li><a href="#">unanswered</a></li>
+                        <li{if $sort_method == "newest"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=newest">newest</a></li>
+                        <li{if $sort_method == "votes"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=votes">votes</a></li>
+                        <li{if $sort_method == "active"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=active">active</a></li>
+                        <li{if $sort_method == "unanswered"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=unanswered">unanswered</a></li>
                     </ul>
 
                     <section id="questions">
@@ -58,9 +58,9 @@
                                 </div>
                                 
                                 <div class="tags">
-                                    <a href="#" class="post-tag">java</a>
-                                    <a href="#" class="post-tag">python</a>
-                                    <a href="#" class="post-tag">css</a>
+                                    {foreach $tags[$question@index] as $tag}
+                                    <a href="#" class="post-tag">{$tag.tagname}</a>
+                                    {/foreach}
                                 </div>
 
                                 <div class="started">

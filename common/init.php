@@ -9,9 +9,17 @@
     require_once('session.php');
     require_once('smarty.php');
 
-    function returnErrorJSON($response, $errorCode, $errorMessage) {
-        $response['errorCode'] = $errorCode;
-        $response['errorMessage'] = $errorMessage;
+    function returnErrorJSON() {
+        if(func_num_args() < 3 && func_num_args() > 4) {
+            throw new Exception("returnErrorJSON: invalid number of arguments");
+        }
+        $response = func_get_arg(0);
+        $response['errorCode'] = func_get_arg(1);
+        $response['errorMessage'] = func_get_arg(2);
+        if(func_num_args() == 4) {
+            $response['errors'] = func_get_arg(3);
+        }
         die(json_encode($response));
+
     }
 ?>

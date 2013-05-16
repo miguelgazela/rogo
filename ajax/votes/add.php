@@ -14,32 +14,25 @@
             returnErrorJSON($response, 3, "A vote must have a type");
         }
 
-        $id = $_POST['id'];
+        $postid = $_POST['id'];
         $voteType = $_POST['voteType'];
 
         if($voteType != 1 && $voteType != 2) {
             returnErrorJSON($response, 4, "Invalid vote type");
         }
-        if(!is_numeric($id)) {
+        if(!is_numeric($postid)) {
             returnErrorJSON($response, 5, "Invalid id");
         }
 
         try {
-            $voteid = getVoteOfPost($id);
-            if(!$voteid) {
-                $voteid = insertVote($id, $voteType);
-                $response['voteid'] = $voteid;
-            } else {
-                updateVote($id, $voteType);
-            }
+            $vote = insertVote($postid, $voteType);
+            $response['voteid'] = $vote;
             $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
-            
             die(json_encode($response));
         } catch(DatabaseException $e) {
-            returnErrorJSON($response, 6, "Error inserting vote into database");
+            returnErrorJSON($response, 6, "Error inserting vote into database", $e->getErrors());
         }
-
     } else {
         returnErrorJSON($response, 1, "You don't have permission to vote");
     }

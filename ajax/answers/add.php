@@ -34,13 +34,22 @@
         }
 
         try {
+            $db->beginTransaction();
             $answerid = insertAnswer($id, $text, $title);
+            updLastActivityDate($id);
+            $db->commit();
+
             $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
             $response['answerId'] = $answerid;
+            $response['username'] = $_SESSION['s_username'];
+            $response['userid'] = $_SESSION['s_user_id'];
+            $response['answerText'] = $text;
+            $response['reputation'] = $_SESSION['s_reputation'];
             die(json_encode($response));
         } catch(DatabaseException $e) {
-            returnErrorJSON($response, 7, "Error inserting answer into database");
+            $db->rollBack();
+            returnErrorJSON($response, 7, "Error inserting answer into database", $e->getErrors());
         }
 
     } else {

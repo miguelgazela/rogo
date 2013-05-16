@@ -26,9 +26,23 @@
     }
 
     // send data to smarty and display template
-    $smarty->assign('tags',getTagsOfQuestion($id));
-    $smarty->assign('comments', getCommentsOfPost($id));
-    $smarty->assign('answers',getAnswersOfQuestion($id));
     $smarty->assign('question', $question);
+    $smarty->assign('tags',getTagsOfQuestion($id));
+    $answers = getAnswersOfQuestion($id);
+    $smarty->assign('answers', $answers);
+
+    // get votes and comments to array
+    $votes = array();
+    $comments = array();
+    $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$id), true);
+    $comments[] = getCommentsOfPost($id);
+
+    foreach($answers as $answer) {
+        $comments[] = getCommentsOfPost($answer['postid']);
+        $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$answer['postid']), true);
+    }
+    $smarty->assign("comments", $comments);
+    $smarty->assign("votes", $votes);
+
     $smarty->display("questions/view.tpl");
 ?>

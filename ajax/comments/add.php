@@ -3,6 +3,7 @@
     include_once('../../common/init.php');
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/comments.php');
+    include_once($BASE_PATH . 'database/questions.php');
 
     header('Content-Type: application/json');
     $response['requestStatus'] = "NOK";
@@ -26,12 +27,21 @@
         }
 
         try {
+            $db->beginTransaction();
             $commentid = insertComment($postid, $text);
+            updLastActivityDate($postid);
+            $db->commit();
+
             $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
             $response['commentId'] = $commentid;
+            $response['commentText'] = $text;
+            $response['commentOwnerUsername'] = $_SESSION['s_username'];
+            $response['commentOwnerId'] = $_SESSION['s_user_id'];
+            
             die(json_encode($response));
         } catch(DatabaseException $e) {
+            $db->rollBack();
             returnErrorJSON($response, 6, "Error inserting answer into database");
         }
 

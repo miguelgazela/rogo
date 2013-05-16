@@ -18,6 +18,7 @@
         } catch (Exception $e) {
             $db->rollBack();
             $errors->addError('followable', 'error processing insert into followable table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
 
@@ -27,6 +28,7 @@
         } catch (Exception $e) {
             $db->rollBack();
             $errors->addError('rogouser', 'error processing insert into rogouser table');
+            $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
         $db->commit();
@@ -37,14 +39,16 @@
         global $db;
         $response = array();
 
-        $result = $db->prepare("SELECT permissiontype, userid FROM rogouser WHERE username = ? AND passhash = ?");
+        $result = $db->prepare("SELECT permissiontype, userid, reputation FROM rogouser WHERE username = ? AND passhash = ?");
         $result->execute(array($login,$pass_hash));
         $user = $result->fetch();
 
         if($user) {
+            var_dump($user);
             $response['result'] = 'OK';
             $response['userid'] = $user['userid'];
             $response['permissiontype'] = $user['permissiontype'];
+            $response['reputation'] = $user['reputation'];
         } else {
             $response['result'] = 'NOK';
         }
