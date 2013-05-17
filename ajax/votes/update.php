@@ -1,4 +1,4 @@
-<?
+<?php
     // initialize
     include_once('../../common/init.php');
 	include_once($BASE_PATH . 'database/votes.php');
@@ -34,16 +34,17 @@
             	if($vote['votetype'] == $voteType) {
             		returnErrorJSON($response, 7, "Vote is already of that type", array("vote" => $vote, "existed" => true, "action" => "failed"));
             	}
+
             	$db->beginTransaction();
                 updateVote($vote['voteid'], $voteType);
 
             	// needs to update score of post
-            	if($voteType == 1) {
-                	updateAnswerScore($postid, +2);
-            		updateQuestionScore($postid, +2);
+            	if($vote['voteType'] == 1) {
+                	updateAnswerScore($postid, 1);
+            		updateQuestionScore($postid, 1);
             	} else {
-            		updateAnswerScore($postid, -2);
-            		updateQuestionScore($postid, -2);
+            		updateAnswerScore($postid, -1);
+            		updateQuestionScore($postid, -1);
             	}
                 $db->commit();
                 

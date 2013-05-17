@@ -39,7 +39,7 @@
                                         <span class="stat-number">{$question.answercount}</span>
                                         <span class="stat-description">answers</span>
                                     </div>
-                                    {if $question.score > 0}
+                                    {if $question.score != 0}
                                         <div class="stats-votes voted">
                                     {else}
                                         <div class="stats-votes">

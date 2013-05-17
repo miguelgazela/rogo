@@ -12,13 +12,19 @@
                     <h3>{$question.title}</h3>
                 </div>
                 <div class="span9">
-                    <div class="question-info ">
+                    <div class="question-info" id="question-{$question.postid}">
                         <div class="question-side-container pull-left">
                             <img class="media-object" src="{$BASE_URL}img/imageholder.png">
                             <div class="vote-area" id="vote-area-{$question.questionid}">
                                 <span class="vote-up"></span>
                                 <span class="vote-counter text-center">{$question.score}</span>
                                 <span class="vote-down"></span>
+                                {if $question.ownerid == $s_user_id}
+                                    {if $question.answercount == 0}
+                                        <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
+                                    {/if}
+                                    <span class="edit text-center"><a href="{$BASE_URL}pages/questions/edit.php?id={$question.postid}"><i class="icon-edit icon-2x"></i></a></span>
+                                {/if}
                             </div>
                         </div>
                         <div class="question-container">
@@ -91,12 +97,23 @@
                                     <span class="vote-up"></span>
                                     <span class="vote-counter text-center">{$answer.score}</span>
                                     <span class="vote-down"></span>
-                                    {if $question.ownerid == $s_user_id}
+                                    {if $question.acceptedanswerid == null}
                                         <span class="accept-answer text-center"><i class="icon-ok-circle icon-2x"></i></span>
-                                        {if $answer.commentcount == 0}
-                                        <span class="remove-answer text-center"><i class="icon-remove-sign icon-2x"></i></span>
+                                    {else}
+                                        {if $question.ownerid == $s_user_id && $question.acceptedanswerid != $answer.postid}
+                                            <span class="accept-answer text-center"><i class="icon-ok-circle icon-2x hide"></i></span>
+                                        {else}
+                                            {if $question.acceptedanswerid == $answer.postid}
+                                                <span class="accept-answer text-center accepted"><i class="icon-ok-circle icon-2x"></i></span>
+                                            {/if}
                                         {/if}
-                                        <span class="edit-answer text-center"><i class="icon-edit icon-2x"></i></span>
+                                    {/if}
+
+                                    {if $answer.ownerid == $s_user_id}
+                                        {if $answer.commentcount == 0}
+                                            <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
+                                        {/if}
+                                        <span class="edit text-center"><i class="icon-edit icon-2x"></i></span>
                                     {/if}
                                 </div>
                                 <div class="answer-container">

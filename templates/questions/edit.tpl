@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    
-    {include file="../header.tpl" title="Rogo - Add Question"}
+    {include file="../header.tpl" title="Rogo - Edit Question"}
 
     <body>
 
@@ -10,19 +10,19 @@
         <div class="container">
             <div class="row">
                 <div class="span9">
-                    <h2 class="add_new_question">Add Question</h2>
-                    <form id="ask_question_form" class="form-horizontal" action="{$BASE_URL}actions/questions/add_action.php" method="post">
+                    <h2 class="add_new_question">Edit Question</h2>
+                    <form id="ask_question_form" class="form-horizontal" action="{$BASE_URL}actions/questions/edit_action.php" method="post">
                         <div class="control-group inputQuestionTitle">
                             <label class="control-label" for="inputQuestionTitle">Title</label>
                             <div class="controls">
-                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific." value="{$s_values.question}">
+                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific." value="{if $s_values != ''}{$s_values.question}{else}{$question.title}{/if}">
                             </div>
                             <span class="help-block"></span>
                         </div>
                         <div class="control-group inputQuestionDetails">
                             <label class="control-label" for="inputQuestionDetails">Details</label>
                             <div class="controls">
-                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetails()">{$s_values.details}</textarea>
+                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetails()">{if $s_values.details != ""}{$s_values.details}{else}{$question.body}{/if}</textarea>
                             </div>
                             <span class="help-block"></span>
                         </div>
@@ -33,14 +33,19 @@
                             </div>
                             <span class="help-block"></span>
                         </div>
-                        <div class="tags_container"></div>
+                        <div class="tags_container">
+                            {foreach $tags as $tag}
+                                <a class="post-tag">{$tag.tagname} <i class='icon-remove' onclick='return removeThisTag(this)'></i></a>
+                            {/foreach}
+                        </div>
                     </form>
-                    <button type="submit" form="ask_question_form" class="btn">Add Question</button>
+                    <button type="submit" form="ask_question_form" class="btn save">Save</button>
+                    <button type="button" class="btn cancel">Cancel</button>
                 </div>
 
                 <div class="span3">
                     <div class="sidebar-content affix">
-                        <a href="#" class="ask-question-btn">Ask Question</a>
+                        <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                     </div>
                 </div>
             </div>
@@ -94,7 +99,6 @@
 
                 //event.preventDefault();
                 if(validateQuestion() && validateQuestionDetails() && validateTags()) {
-                    $("#inputQuestionTags").prop("disabled", false);
                     var tags = "";
                     // add each tag to a comma separated list
                     $("a.post-tag").each(function(index) {

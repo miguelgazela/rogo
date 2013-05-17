@@ -27,6 +27,46 @@ $(document).ready(function() {
     addVoteUpHandlers();
     addVoteDownHandlers();
 
+    // define the accept answer action
+    $(".accept-answer").click(function(event){
+
+        var button = this;
+
+        if($(this).hasClass("accepted")) {
+            var intention = "remove-accept"; // remove this answer as accepted
+            $(this).removeClass("accepted");
+            $(".accept-answer i").removeClass("hide");
+        } else {
+            // check if there is already an accepted answer
+            if($(".accept-answer.accepted").length != 0) {
+                alert("Ups! You've already marked an answer as accepted. Please remove it and add this one instead.");
+                return;
+            } else {
+                $(this).addClass("accepted");
+                $(".accept-answer").not(this).children('i').addClass("hide");
+                var intention = "accept";
+            }
+        }
+
+        var questionid = $(".question-info").attr("id").slice(9);
+        var answerid = $(this).parents(".answer").attr("id").slice(7);
+
+        $.post(BASE_URL+"ajax/questions/accept_answer.php", {questionid: questionid, answerid: answerid, intention: intention}, function(response){
+            console.log(response); // TODO remove
+
+            if(response.requestStatus != "OK") {
+                if(intention == "accept") {
+                    $(button).removeClass("accepted");
+                    $(".accept-answer").not(button).children('i').removeClass("hide");
+                } else if (intention == "remove-accept") {
+                    $(button).addClass("accepted");
+                    $(".accept-answer").not(button).children('i').addClass("hide");
+                }
+                alert("Ups! An error occurred while trying to update this answer. Please try again later."); // TODO improve warning quality
+            }
+        });    
+    });
+
     // TODO this will be made in the php part
     $(".vote-area").each(function(){
         var postid = $(this).attr("id").slice(10);
@@ -94,12 +134,20 @@ function addRemoveCommentHandlers() {
 }
 
 function addRemoveAnswerHandlers() {
-    $(".remove-answer").click(function(e){
+    $(".answer .remove").click(function(e){
         var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
         $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
-            //console.log(response); // TODO remove
+            console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 $("#answer-"+answerId).remove();
+
+                // update answer counter
+                var current = parseInt($("span.answers-counter").text());
+                if(current == 2) {
+                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current-1)+"</span> Answer");
+                } else {
+                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current-1)+"</span> Answers");
+                }
             } else {
                 alert("Ups! An error occurred while trying to remove your answer. Please try again later."); // TODO improve warning quality
             }
@@ -118,7 +166,6 @@ function addVoteUpHandlers() {
         url += getUrlOfVoteAction(this, ".vote-down", currentScore, scores);
 
         $.post(url, {id: postid, voteType: 1}, function(response){
-            //console.log(response); // TODO remove
             voteRequestResponseHandler(response, event.target, currentScore, url);
         });
     });
@@ -133,9 +180,7 @@ function addVoteDownHandlers() {
         // figure out the desired action
         var scores = [1, -2, -1];
         url += getUrlOfVoteAction(this, ".vote-up", currentScore, scores);
-
         $.post(url, {id: postid, voteType: 2}, function(response){
-            //console.log(response); // TODO remove
             voteRequestResponseHandler(response, event.target, currentScore, url);
         });
     });
@@ -161,6 +206,7 @@ function getUrlOfVoteAction(element, classVote, currentScore, scores) {
 }
 
 function voteRequestResponseHandler(response, element, currentScore, url) {
+    console.log("URL: "+url);
     console.log(response);
     if(response.requestStatus == "NOK") {
         $(element).siblings(".vote-counter").text(currentScore);
@@ -247,7 +293,7 @@ function addAnswer(questionID) {
             //console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 var answer = "<div class='answer' id='"+response.data.answerID+"'>";
-                answer += "<div class='vote-area pull-left'><span class='vote-up'></span>";
+                answer += "<div class='vote-area pull-left' id='vote-area-"+response.data.answerID+"'><span class='vote-up'></span>";
                 answer += "<span class='vote-counter text-center'>0</span>";
                 answer += "<span class='vote-down'></span>";
 
@@ -257,8 +303,8 @@ function addAnswer(questionID) {
                     answer += "<span class='accept-answer' text-center accepted'><i class='icon-ok-circle icon-2x'></i></span>";
                 }
                 
-                answer += '<span class="remove-answer text-center"><i class="icon-remove-sign icon-2x"></i></span>';
-                answer += '<span class="edit-answer text-center"><i class="icon-edit icon-2x"></i></span></div>';
+                answer += '<span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>';
+                answer += '<span class="edit text-center"><i class="icon-edit icon-2x"></i></span></div>';
                 answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
                 answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
                 answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
@@ -268,11 +314,11 @@ function addAnswer(questionID) {
                 $("#inputAnswer").val(""); // clear textarea
 
                 // update answer counter
-                var current = parseInt($("span.answers-counter").text()) + 1;
+                var current = parseInt($("span.answers-counter").text());
                 if(current == 1) {
-                    $('.answers-header > h4').html("<span class='answers-counter'>"+current+"</span> Answer");
+                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answer");
                 } else {
-                    $('.answers-header > h4').html("<span class='answers-counter'>"+current+"</span> Answers");
+                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answers");
                 }
 
                 addRemoveAnswerHandlers();

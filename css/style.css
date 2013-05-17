@@ -597,7 +597,8 @@ form#ask_question_form span.help-block {
   margin-top: 5px;
 }
 
-form#ask_question_form + button.btn {
+form#ask_question_form + .btn,
+form#ask_question_form + .btn + .btn {
   width: 560px;
   height: 40px;
   margin-left: 120px;
@@ -617,8 +618,18 @@ form#ask_question_form + button.btn {
           transition: all 0.2s linear;
 }
 
-form#ask_question_form + button.btn:hover {
+form#ask_question_form + .btn:hover,
+form#ask_question_form + .btn.save + .btn.cancel:hover {
   background-color: #103d69;
+}
+
+form#ask_question_form + .btn.save,
+form#ask_question_form + .btn.save + .btn.cancel {
+  width: 279px;
+}
+
+form#ask_question_form + .btn.save + .btn.cancel {
+  margin-left: 0;
 }
 
 form#ask_question_form div.inputQuestionTags {
@@ -736,18 +747,27 @@ div.question-info .question-container .question-footer .edited {
 .vote-area span.vote-up,
 .vote-area span.vote-down,
 .vote-area span.accept-answer,
-.vote-area span.remove-answer,
-.vote-area span.edit-answer {
+.vote-area span.remove,
+.vote-area span.edit {
   cursor: pointer;
 }
 
-.vote-area span.remove-answer,
-.vote-area span.edit-answer {
+.vote-area .edit a {
+  color: #306aa2;
+}
+
+.vote-area .edit a:hover {
+  text-decoration: none;
+  color: #103d69;
+}
+
+.vote-area span.remove,
+.vote-area span.edit {
   margin-top: 5px;
 }
 
-.vote-area span.remove-answer:hover,
-.vote-area span.edit-answer:hover {
+.vote-area span.remove:hover,
+.vote-area span.edit:hover {
   color: #103d69;
 }
 

@@ -48,9 +48,20 @@
         return $postid;
     }
 
+    function getAnswerById($id) {
+        global $db;
+        if(!is_numeric($id)) {
+            throw new Exception("invalid_id");
+        }
+
+        $stmt = $db->prepare("SELECT answer.*, post.*, username, reputation FROM answer, post, rogouser WHERE answerid = postid AND post.ownerid = rogouser.userid AND answerid = ?");
+        $stmt->execute(array($id));
+        return $stmt->fetch();
+    }
+
     function getAnswersOfQuestion($questionid) {
         global $db;
-        $result = $db->prepare("SELECT post.*, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid ORDER BY score DESC, lastactivitydate DESC");
+        $result = $db->prepare("SELECT post.*, answer.accepted, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid ORDER BY score DESC, lastactivitydate DESC");
         $result->execute(array($questionid));
         return $result->fetchAll();
     }
@@ -119,6 +130,30 @@
                 $errors->addError('exception', $e->getMessage());
                 throw ($errors);
             }
+        }
+    }
+
+    function acceptedAsValidAnswer($answerid, $state) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($answerid)) {
+            $errors->addError('updateAnswerAcceptedState', 'invalid answer id');
+            throw ($errors);
+        }
+
+        try {
+            if($state) {
+                $stmt = $db->prepare("UPDATE answer SET accepted = true WHERE answerid = ?");
+            } else {
+                $stmt = $db->prepare("UPDATE answer SET accepted = false WHERE answerid = ?");
+            }
+            $stmt->execute(array($answerid));
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing update on answer accepted state');
+            $errors->addError('exception', $e->getMessage());
+            $errors->addError('state', $state);
+            throw ($errors);
         }
     }
 

@@ -117,6 +117,48 @@
         }
     }
 
+    function acceptValidAnswer($questionid, $answerid) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($answerid)) {
+            $errors->addError('acceptValidAnswer', 'invalid answer id');
+            throw ($errors);
+        }
+        if(!is_numeric($questionid)) {
+            $errors->addError('acceptValidAnswer', 'invalid question id');
+            throw ($errors);
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE question SET acceptedanswerid = ? WHERE questionid = ?");
+            $stmt->execute(array($answerid, $questionid));
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing update on accept valid answer');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function removeAcceptedAnswer($questionid) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($questionid)) {
+            $errors->addError('removeValidAnswer', 'invalid question id');
+            throw ($errors);
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE question SET acceptedanswerid = ? WHERE questionid = ?");
+            $stmt->execute(array(null, $questionid));
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing update on remove valid answer');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
     function updLastActivityDate($postid) {
         global $db;
         $errors = new DatabaseException();
