@@ -25,13 +25,17 @@
         }
 
         try {
-            $vote = insertVote($postid, $voteType);
-            $response['voteid'] = $vote;
-            $response['errorCode'] = -1;
-            $response['requestStatus'] = "OK";
-            die(json_encode($response));
+            $vote = getVoteOfPost($postid);
+
+            if(!$vote) {
+                $vote = insertVote($postid, $voteType);
+                $response['requestStatus'] = "OK";
+                returnOkJSON($response, "Vote was added to the database", array("voteid" => $vote, "existed" => false, "action" => "inserted"));
+            } else {
+                returnErrorJSON($response, 6, "Vote already exists", array("vote" => $vote, "existed" => true, "action" => "failed"));
+            }
         } catch(DatabaseException $e) {
-            returnErrorJSON($response, 6, "Error inserting vote into database", $e->getErrors());
+            returnErrorJSON($response, 7, "Error inserting vote into database", $e->getErrors());
         }
     } else {
         returnErrorJSON($response, 1, "You don't have permission to vote");

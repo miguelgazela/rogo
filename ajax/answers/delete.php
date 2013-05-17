@@ -18,9 +18,8 @@
 
         try {
             removeAnswer($answerid);
-            $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
-            die(json_encode($response));
+            returnOkJSON($response, "Answer was deleted from database");
         } catch(DatabaseException $e) {
             returnErrorJSON($response, 4, "Error with database operation", $e->getErrors());
         }

@@ -18,9 +18,8 @@
 
         try {
             removeComment($commentid);
-            $response['errorCode'] = -1;
             $response['requestStatus'] = "OK";
-            die(json_encode($response));
+            returnOkJSON($response, "Comment was deleted from the database");
         } catch(DatabaseException $e) {
             returnErrorJSON($response, 4, "Error with database operation", $e->getErrors());
         }

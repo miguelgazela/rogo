@@ -16,12 +16,9 @@
             returnErrorJSON($response, 3, "Invalid id");
         }
 
-        $response['errorCode'] = -1;
-        $response['requestStatus'] = "OK";
         $comments = getCommentsOfPost($id);
-        $response['data']['totalItems'] = count($comments);
-        $response['data']['comments'] = $comments;
-        die(json_encode($response));
+        $response['requestStatus'] = "OK";
+        returnOkJSON($response, "Returning comments for post", array("totalItems" => count($comments), "comments" => $comments));
     } else {
         returnErrorJSON($response, 1, "You don't have permission to get comments");
     }

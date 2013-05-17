@@ -26,7 +26,7 @@ body {
   background-image: -o-linear-gradient(top, #306AA2, #306AA2);
   background-image: linear-gradient(to bottom, #306AA2, #306AA2);
   background-repeat: repeat-x;
-  border: 0px;
+  border: 0;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
 }
 
@@ -37,6 +37,7 @@ body {
   text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
   -webkit-transition: all .4s linear;
      -moz-transition: all .4s linear;
+       -o-transition: all .4s linear;
           transition: all .4s linear;
 }
 .navbar .brand:hover {
@@ -74,9 +75,9 @@ body {
   font-size: 13px;
   font-weight: normal;
   line-height: 1;
-  -webkit-border-radius: 0px;
-     -moz-border-radius: 0px;
-          border-radius: 0px;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
 }
 
 .navbar-inverse .navbar-search .search-query {
@@ -152,7 +153,6 @@ body {
 }
 
 
-
 /* navigation bar current page */
 body._questions .nav > li._questions,
 body._signup .nav > li._signup,
@@ -192,9 +192,6 @@ body > .container {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
-}
-
-#questions {
 }
 
 .question-summary {

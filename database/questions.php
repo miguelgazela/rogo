@@ -136,6 +136,33 @@
         }
     }
 
+    function updateQuestionScore($postid, $diffScore) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($postid)) {
+            $errors->addError('updateQuestionScore', 'invalid post id');
+            throw ($errors);
+        }
+        if(!is_numeric($diffScore)) {
+            $errors->addError('updateQuestionScore', 'invalid score type');
+            throw ($errors);
+        }
+
+        $stmt = $db->prepare("SELECT * FROM question WHERE questionid = ?");
+        $stmt->execute(array($postid));
+        if($stmt->fetch()) {
+            try {
+                $stmt = $db->prepare("UPDATE post SET score = (SELECT post.score FROM post WHERE postid = ?) + ? WHERE postid = ?");
+                $stmt->execute(array($postid, $diffScore, $postid));
+            } catch(Exception $e) {
+                $errors->addError('question', 'error processing update on question score');
+                $errors->addError('exception', $e->getMessage());
+                throw ($errors);
+            }
+        }
+    }
+
     /* HELPER FUNCTIONS */
 
     function validateQuestionTitle($title) {

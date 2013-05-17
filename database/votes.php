@@ -59,14 +59,11 @@
         global $db;
         $errors = new DatabaseException();
 
-        $db->beginTransaction();
-
         // delete vote
         try {
             $stmt = $db->prepare("DELETE FROM vote WHERE voteid = ?");
             $stmt->execute(array($voteid));
         } catch(Exception $e) {
-            $db->rollBack();
             $errors->addError('vote', 'error processing delete from vote table');
             throw ($errors);
         }
@@ -76,11 +73,9 @@
             $stmt = $db->prepare("DELETE FROM notifiable WHERE notifiableid = ?");
             $stmt->execute(array($voteid));
         } catch(Exception $e) {
-            $db->rollBack();
             $errors->addError('notifiable', 'error processing delete from notifiable table');
             throw ($errors);
         }
-        $db->commit();
     }
 
     /**

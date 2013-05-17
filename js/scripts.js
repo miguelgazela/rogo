@@ -18,85 +18,21 @@ $(document).ready(function() {
     });
 
     // define the remove action for comments
-    $(".comment i").click(function(e){
-        var commentId = parseInt($(this).parent(".comment").attr("id").slice(8));
-        $.post(BASE_URL+"ajax/comments/delete.php", {id: commentId}, function(response) {
-            //console.log(response); // TODO remove
-            if(response.requestStatus == "OK") {
-                $("#comment-"+commentId).remove();
-            } else {
-                alert("Ups! An error occurred while trying to remove your comment. Please try again later."); // TODO improve warning quality
-            }
-        });
-    });
+    addRemoveCommentHandlers();
 
     // define the remove action for answers
-    $(".remove-answer").click(function(e){
-        var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
-        $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
-            console.log(response); // TODO remove
-            if(response.requestStatus == "OK") {
-                $("#answer-"+answerId).remove();
-            } else {
-                alert("Ups! An error occurred while trying to remove your answer. Please try again later."); // TODO improve warning quality
-            }
-        });
-    });
+    addRemoveAnswerHandlers();
 
-    $("span.vote-up").click(function(event){
-        var postid = $(this).parent(".vote-area").attr("id").slice(10);
-        $.post(BASE_URL+"ajax/votes/control.php", {id: postid, voteType: 1}, function(response){
-            console.log(response); // TODO remove
-            if(response.requestStatus == "OK") {
-                var currentScore = parseInt($(event.target).siblings('.vote-counter').text());
+    // define the actions for vote buttons
+    addVoteUpHandlers();
+    addVoteDownHandlers();
 
-                if(response.existed == false) {
-                    $(event.target).addClass("active");
-                    $(event.target).siblings('.vote-counter').text(currentScore+1);
-                } else {
-                    if(response.action == "updated") {
-                        $(event.target).addClass("active");
-                        $(event.target).siblings("span.vote-down").removeClass("active");
-                        $(event.target).siblings('.vote-counter').text(currentScore+2);
-                    } else {
-                        $(event.target).removeClass("active");
-                        $(event.target).siblings('.vote-counter').text(currentScore-1);
-                    }
-                }
-            }
-        });
-    });
-
-    $("span.vote-down").click(function(event){
-        var postid = $(this).parent(".vote-area").attr("id").slice(10);
-
-        $.post(BASE_URL+"ajax/votes/add.php", {id: postid, voteType: 2}, function(response){
-            //console.log(response); // TODO remove
-            if(response.requestStatus == "OK") {
-                var currentScore = parseInt($(event.target).siblings('.vote-counter').text());
-
-                if(response.existed == false) {
-                    $(event.target).addClass("active");
-                    $(event.target).siblings('.vote-counter').text(currentScore-1);
-                } else {
-                    if(response.action == "updated") {
-                        $(event.target).addClass("active");
-                        $(event.target).siblings("span.vote-up").removeClass("active");
-                        $(event.target).siblings('.vote-counter').text(currentScore-2);
-                    } else {
-                        $(event.target).removeClass("active");
-                        $(event.target).siblings('.vote-counter').text(currentScore+1);
-                    }
-                }
-            }
-        });
-    });
-
+    // TODO this will be made in the php part
     $(".vote-area").each(function(){
         var postid = $(this).attr("id").slice(10);
         $.get(BASE_URL+"ajax/votes/voted_on_post.php", {id: postid}, function(response){
             //console.log(response); // TODO remove
-            if(response.voted == true) {
+            if(response.voted === true) {
                 if(response.type == 1) {
                     $("#vote-area-"+postid).children(".vote-up").addClass("active");
                 } else if(response.type == 2) {
@@ -128,10 +64,11 @@ $(document).ready(function() {
                 $.post(BASE_URL+"ajax/comments/add.php", {id: postid, text: comment}, function(response){
                     //console.log(response); // TODO remove
                     if(response.requestStatus == "OK") {
-                        var newComment = "<div class='comment' id='comment-'"+response.data.commentId+">"+response.data.commentText;
-                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span></div>";
+                        var newComment = "<div class='comment' id='comment-"+response.data.commentId+"'>"+response.data.commentText;
+                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span>  <i class='icon-remove-sign'></i></div>";
                         inputCommentCtrl.parent("form").before(newComment);
                         $("#comments-"+postid+" textarea").val("");
+                        addRemoveCommentHandlers();
                     } else {
                         alert("Ups! An error occurred while trying to add your comment. Please try again later."); // TODO improve warning quality
                     }
@@ -140,7 +77,125 @@ $(document).ready(function() {
         }
     });
 
-})
+});
+
+function addRemoveCommentHandlers() {
+    $(".comment i").click(function(e){
+        var commentId = parseInt($(this).parent(".comment").attr("id").slice(8));
+        $.post(BASE_URL+"ajax/comments/delete.php", {id: commentId}, function(response) {
+            //console.log(response); // TODO remove
+            if(response.requestStatus == "OK") {
+                $("#comment-"+commentId).remove();
+            } else {
+                alert("Ups! An error occurred while trying to remove your comment. Please try again later."); // TODO improve warning quality
+            }
+        });
+    });
+}
+
+function addRemoveAnswerHandlers() {
+    $(".remove-answer").click(function(e){
+        var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
+        $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
+            //console.log(response); // TODO remove
+            if(response.requestStatus == "OK") {
+                $("#answer-"+answerId).remove();
+            } else {
+                alert("Ups! An error occurred while trying to remove your answer. Please try again later."); // TODO improve warning quality
+            }
+        });
+    });
+}
+
+function addVoteUpHandlers() {
+    $("span.vote-up").click(function(event){
+        var postid = $(this).parent(".vote-area").attr("id").slice(10);
+        var url = BASE_URL+"ajax/votes/";
+        var currentScore = parseInt($(this).siblings('.vote-counter').text());
+
+        // figure out the desired action
+        var scores = [-1, 2, 1];
+        url += getUrlOfVoteAction(this, ".vote-down", currentScore, scores);
+
+        $.post(url, {id: postid, voteType: 1}, function(response){
+            //console.log(response); // TODO remove
+            voteRequestResponseHandler(response, event.target, currentScore, url);
+        });
+    });
+}
+
+function addVoteDownHandlers() {
+    $("span.vote-down").click(function(event){
+        var postid = $(this).parent(".vote-area").attr("id").slice(10);
+        var url = BASE_URL+"ajax/votes/";
+        var currentScore = parseInt($(this).siblings('.vote-counter').text());
+
+        // figure out the desired action
+        var scores = [1, -2, -1];
+        url += getUrlOfVoteAction(this, ".vote-up", currentScore, scores);
+
+        $.post(url, {id: postid, voteType: 2}, function(response){
+            //console.log(response); // TODO remove
+            voteRequestResponseHandler(response, event.target, currentScore, url);
+        });
+    });
+}
+
+function getUrlOfVoteAction(element, classVote, currentScore, scores) {
+    if($(element).hasClass("active")) {
+        $(element).removeClass("active");
+        $(element).siblings(".vote-counter").text(currentScore+scores[0]);
+        return "delete.php";
+    } else {
+        $(element).addClass("active");
+
+        if($(element).siblings(classVote).hasClass("active")) { // updating vote
+            $(element).siblings(classVote).removeClass("active");
+            $(element).siblings(".vote-counter").text(currentScore+scores[1]);
+            return "update.php";
+        } else {
+            $(element).siblings(".vote-counter").text(currentScore+scores[2]);
+            return "add.php";
+        }
+    }
+}
+
+function voteRequestResponseHandler(response, element, currentScore, url) {
+    console.log(response);
+    if(response.requestStatus == "NOK") {
+        $(element).siblings(".vote-counter").text(currentScore);
+
+        if(url.indexOf('add.php') != -1) {
+            $(element).removeClass("active");
+
+            if(response.errorCode == 7 && (response.errors.exception.indexOf("cannot vote") != -1)) {
+                alert("You can't vote on your own posts.");
+            } else if(response.errorCode == 6) { // vote existed already
+                alert("Ups! You've already voted on this post. Please don't mess with our html, it will ruin your experience.");
+            } else {
+                alert("Ups! An error occurred while trying to add your vote. Please try again later."); // TODO improve warning quality
+            }
+        } else if(url.indexOf('delete.php') != -1) {
+            $(element).addClass("active");
+
+            if(response.errorCode == 4) {
+                alert("Ups! This vote doesn't seems to exist. Please don't mess with our html, it will ruin your experience.");
+            } else {
+                alert("Ups! An error occurred while trying to remove your vote. Please try again later."); // TODO improve warning quality
+            }
+        } else if(url.indexOf('update.php') != -1) {
+            $(element).removeClass("active");
+
+            if(response.errorCode == 7) {
+                alert("Ups! This vote is already UP. Please don't mess with our html, it will ruin your experience.");
+            } else if(response.errorCode == 6) {
+                alert("Ups! This vote doesn't seems to exist. Please don't mess with our html, it will ruin your experience.");
+            } else {
+                alert("Ups! An error occurred while trying to update your vote. Please try again later."); // TODO improve warning quality
+            }
+        }
+    }
+}
 
 function getPrettyDate(date) {
     var rightNow = new Date();
@@ -148,7 +203,7 @@ function getPrettyDate(date) {
     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     if(diff_sec < 60) {
-        if(diff_sec != 0)
+        if(diff_sec !== 0)
             return diff_sec+"s ago";
         else
             return "1s ago";
@@ -189,13 +244,21 @@ function addAnswer(questionID) {
         $(".inputAnswer").removeClass("error");
 
         $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle}, function(response) {
-            console.log(response); // TODO remove
+            //console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 var answer = "<div class='answer' id='"+response.data.answerID+"'>";
                 answer += "<div class='vote-area pull-left'><span class='vote-up'></span>";
                 answer += "<span class='vote-counter text-center'>0</span>";
                 answer += "<span class='vote-down'></span>";
-                answer += "<span class='accept-answer' text-center accepted'><i class='icon-ok-circle icon-2x'></i></span></div>";
+
+                // get the question owner username
+                username = $(".question-footer .user-info a").text();
+                if(response.data.username == username) {
+                    answer += "<span class='accept-answer' text-center accepted'><i class='icon-ok-circle icon-2x'></i></span>";
+                }
+                
+                answer += '<span class="remove-answer text-center"><i class="icon-remove-sign icon-2x"></i></span>';
+                answer += '<span class="edit-answer text-center"><i class="icon-edit icon-2x"></i></span></div>';
                 answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
                 answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
                 answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
@@ -211,6 +274,8 @@ function addAnswer(questionID) {
                 } else {
                     $('.answers-header > h4').html("<span class='answers-counter'>"+current+"</span> Answers");
                 }
+
+                addRemoveAnswerHandlers();
             } else {
                 alert("Ups! An error occurred while trying to add your answer. Please try again later."); // TODO improve warning quality
             }
