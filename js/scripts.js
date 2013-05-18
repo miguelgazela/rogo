@@ -1,14 +1,29 @@
 var BASE_URL = "http://gnomo.fe.up.pt/~lbaw12201/rogo/";
 var SPACE_KEY = 32;
 var ENTER_KEY = 13;
+var COMMA_KEY = 188;
+
+var opts = {
+  lines: 13, // The number of lines to draw
+  length: 23, // The length of each line
+  width: 8, // The line thickness
+  radius: 28, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 5, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};
 
 $(document).ready(function() {
     console.log("JQuery working");
-
-    // display pretty dates
-    $(".action-time").each(function(){
-        $(this).text(getPrettyDate(new Date($(this).text())));
-    });
 
     // define the show more action for comments
     $(".showMore").click(function(e){
@@ -116,7 +131,63 @@ $(document).ready(function() {
             }
         }
     });
+});
 
+$("form.edit-question").submit(function(event) {
+
+    //event.preventDefault();
+    if(validateQuestion() && validateQuestionDetails() && validateTags()) {
+        $("#inputQuestionTags").prop("disabled", false);
+        var tags = "";
+        // add each tag to a comma separated list
+        $("a.post-tag").each(function(index) {
+            var tag = $(this).text();
+            tag = tag.substr(0, tag.length-1);
+            if(index == 0) {
+                tags += tag;
+            } else {
+                tags += (","+tag);
+            }
+        });
+        $('#inputQuestionTags').val(tags);
+        var spinner = new Spinner(opts).spin(event.target);
+        return true;
+    }
+   return false;
+});
+
+$("#inputQuestionTags").keyup(function(event) {
+    if(event.which == SPACE_KEY) {
+        var tag = $("#inputQuestionTags").val().toLowerCase();
+        tag = tag.replace(",","");
+        if(tag.length > 1) {
+
+            // check if tag already exists
+            var exists = false;
+            $("a.post-tag").each(function() {
+                if(!exists && $(this).text() == tag) {
+                    exists = true;
+                }
+            });
+
+            if(!exists) {
+                $("div.tags_container").append("<a class='post-tag'>"+tag+"<i class='icon-remove' onclick='return removeThisTag(this)'></i></a>");
+
+                // disable input when 5 tags are added
+                if($("a.post-tag").length == 5) {
+                    $("#inputQuestionTags").prop('disabled', true);
+                    $("#inputQuestionTags").attr('placeholder', 'no more tags allowed');
+                }
+            }
+        }
+        $("#inputQuestionTags").val("");
+    }
+});
+
+$('#inputQuestionTags').keydown(function(event){
+    if(event.which == COMMA_KEY) {
+        return false;
+    }
 });
 
 function addRemoveCommentHandlers() {
@@ -344,7 +415,7 @@ function validateTags() {
 function removeThisTag(event) {
     if($("a.post-tag").length == 5) {
         $("#inputQuestionTags").prop('disabled', false);
-        $("#inputQuestionTags").attr('placeholder', 'at least one tag, max 5 tags');
+        $("#inputQuestionTags").attr('placeholder', 'at least one tag, max 5 tags, separate with spaces');
     }
     $(event).parent().remove();
 }

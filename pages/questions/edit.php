@@ -30,5 +30,6 @@
     // send data to smarty and display template
     $smarty->assign('question', $question);
     $smarty->assign('tags', getTagsOfQuestion($id));
+    $_SESSION['edit_questionid'] = $id;
     $smarty->display("questions/edit.tpl");
 ?>

@@ -5,16 +5,6 @@
     include_once($BASE_PATH . 'database/questions.php');
     include_once($BASE_PATH . 'database/tags.php');
 
-    function returnIfHasErrors($errors) {
-        global $BASE_URL;
-        if($errors->hasErrors()) {
-            $_SESSION['s_error'] = $errors->getErrors();
-            $_SESSION['s_values'] = $_POST;
-            header("Location: $BASE_URL"."pages/questions/add.php");
-            exit;
-        }
-    }
-
     if(isset($_SESSION['s_username'])) {
 
         $errors = new DatabaseException();
@@ -29,7 +19,7 @@
             $errors->addError('tags', 'no_tags');
         }
 
-        returnIfHasErrors($errors);
+        returnIfHasErrors($errors, "pages/questions/add.php");
 
         $question = $_POST['question'];
         $details = $_POST['details'];
@@ -43,7 +33,7 @@
         }
 
         // validate tags
-        returnIfHasErrors($errors);
+        returnIfHasErrors($errors, "pages/questions/add.php");
 
         try {
             $db->beginTransaction();
@@ -60,7 +50,7 @@
                         $tag['tagid'] = insertTag($tagname);
                     } catch(DatabaseException $e) {
                         $db->rollBack();
-                        returnIfHasErrors($e);
+                        returnIfHasErrors($e, "pages/questions/add.php");
                     }
                 }
 
@@ -69,7 +59,7 @@
                     addTagToQuestion($questionid, $tag['tagid']);
                 } catch(DatabaseException $e) {
                     $db->rollBack();
-                    returnIfHasErrors($e);
+                    returnIfHasErrors($e, "pages/questions/add.php");
                 }
             }
 
@@ -79,7 +69,7 @@
             exit;
         } catch (DatabaseException $e) {
             $db->rollBack();
-            returnIfHasErrors($e);
+            returnIfHasErrors($e, "pages/questions/add.php");
         }
     }
 ?>

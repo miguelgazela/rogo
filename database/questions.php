@@ -117,6 +117,24 @@
         }
     }
 
+    function updateQuestion($id, $title, $details) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($id)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE post SET title = ?, body = ? WHERE postid = ?");
+            $stmt->execute(array($title, $details, $id));
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing update on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
     function acceptValidAnswer($questionid, $answerid) {
         global $db;
         $errors = new DatabaseException();

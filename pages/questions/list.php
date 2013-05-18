@@ -12,15 +12,17 @@
 
     $questions = getQuestionsWithSorting($_GET['sort']);
 
+    $tags = array();
+
+    foreach($questions as &$question) {
+        $tags[] = getTagsOfQuestion($question['questionid']);
+        $question['creationdate'] = getPrettyDate($question['creationdate']);
+    }
+
     // send data to smarty
     $smarty->assign('sorted_questions', $questions);
     $smarty->assign('sort_method', $_GET['sort']);
     $smarty->assign('number_questions', count($questions));
-
-    $tags = array();
-    foreach($questions as $question) {
-        $tags[] = getTagsOfQuestion($question['questionid']);   
-    }
     $smarty->assign('tags', $tags);
 
     // display smarty template

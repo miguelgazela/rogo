@@ -19,28 +19,49 @@
             exit();
         }
         incQuestionViews($id);
+        $question['creationdate'] = getPrettyDate($question['creationdate']);
+        $question['lasteditdate'] = getPrettyDate($question['lasteditdate']);
     } catch(Exception $e) {
         $smarty->assign('warning_msg', "He need a valid question id to show you something useful");
         $smarty->display("showWarning.tpl");
         exit();
     }
 
+   
+    
+
+    // get answers, votes, comments and dates to array
+    $answers = getAnswersOfQuestion($id);
+    $votes = array();
+    $comments = array();
+
+    $questionComments = getCommentsOfPost($id);
+    foreach($questionComments as &$comment) {
+        $comment['creationdate'] = getPrettyDate($comment['creationdate']);
+    }
+
+    $comments[] = $questionComments;
+
+    // not working this
+    $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$id), true);
+
+    foreach($answers as &$answer) {
+        $answerComments = getCommentsOfPost($answer['postid']);
+        foreach($answerComments as &$comment) {
+            $comment['creationdate'] = getPrettyDate($comment['creationdate']);
+        }
+        $comments[] = $answerComments;
+        $answer['creationdate'] = getPrettyDate($answer['creationdate']);
+        $answer['lasteditdate'] = getPrettyDate($answer['lasteditdate']);
+
+        // not working this
+        $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$answer['postid']), true);
+    }
+
     // send data to smarty and display template
     $smarty->assign('question', $question);
     $smarty->assign('tags',getTagsOfQuestion($id));
-    $answers = getAnswersOfQuestion($id);
     $smarty->assign('answers', $answers);
-
-    // get votes and comments to array
-    $votes = array();
-    $comments = array();
-    $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$id), true);
-    $comments[] = getCommentsOfPost($id);
-
-    foreach($answers as $answer) {
-        $comments[] = getCommentsOfPost($answer['postid']);
-        $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$answer['postid']), true);
-    }
     $smarty->assign("comments", $comments);
     $smarty->assign("votes", $votes);
 

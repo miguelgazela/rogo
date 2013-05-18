@@ -27,6 +27,17 @@
         }
     }
 
+    function removeTagFromQuestion($questionid, $tagid) {
+        global $db;
+        try {
+            $stmt = $db->prepare("DELETE FROM questiontag WHERE questionid = ? AND tagid = ?");
+            $stmt->execute(array($questionid, $tagid));
+        } catch(Exception $e) {
+            $errors->addError('questiontag', 'error processing delete from questiontag table');
+            throw($errors);
+        }
+    }
+
     function getTagByName($tagname) {
         global $db;
         $result = $db->prepare("SELECT * FROM tag WHERE tagname = ?");
