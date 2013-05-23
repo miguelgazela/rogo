@@ -20,7 +20,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{$BASE_URL}pages/questions/add.php">Add Question</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Messages</a></li>
+                                <li><a href="{$BASE_URL}pages/privmessages/list.php">Messages</a></li>
                                 <li><a href="#">Drafts</a></li>
                                 <li><a href="#">Notifications</a></li>
                                 <li class="divider"></li>
