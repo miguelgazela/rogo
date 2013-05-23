@@ -1,4 +1,4 @@
-<?
+<?php
     include_once($BASE_PATH . 'common/DatabaseException.php');
 
     function insertTag($tagname) {

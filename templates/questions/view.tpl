@@ -97,7 +97,7 @@
                                     <span class="vote-up"></span>
                                     <span class="vote-counter text-center">{$answer.score}</span>
                                     <span class="vote-down"></span>
-                                    {if $question.acceptedanswerid == null}
+                                    {if $question.acceptedanswerid == null && $question.ownerid == $s_user_id}
                                         <span class="accept-answer text-center"><i class="icon-ok-circle icon-2x"></i></span>
                                     {else}
                                         {if $question.ownerid == $s_user_id && $question.acceptedanswerid != $answer.postid}
