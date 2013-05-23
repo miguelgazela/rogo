@@ -2,7 +2,11 @@
     // initialize
     include_once('../../common/init.php');
 
-    $_SESSION['s_error']['global'] = "Not implemented yet";
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-
+    // display smarty template
+    if(isset($_SESSION['s_username'])) {
+        $smarty->display('privmessages/add.tpl');
+    } else {
+        $smarty->assign('warning_msg', "You have to <a href='{$BASE_URL}pages/auth/signin.php'>log in</a> to get access");
+        $smarty->display('showWarning.tpl');
+    }
 ?>
