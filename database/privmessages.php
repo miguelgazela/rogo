@@ -1,8 +1,25 @@
 <?
-    // initialize
-    include_once('../../common/init.php');
+	include_once($BASE_PATH . 'common/DatabaseException.php');
 
-    $_SESSION['s_error']['global'] = "Not implemented yet";
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-
+	function listPrivateMessages($userid){
+		global $db;
+        $stmt = $db->prepare("SELECT usermessage.*, rogouser.userid, rogouser.username FROM usermessage, rogouser WHERE receiverid = ? AND userid = senderid ORDER BY creationdate DESC");
+		$stmt->execute(array($userid));
+        return $stmt->fetchAll();
+	}
+	
+	function getPrivateMessage($msgid, $userReceiverID){
+		global $db;
+        $stmt = $db->prepare("SELECT * FROM usermessage WHERE usermsgid = ? AND receiverid = ?");
+		$stmt->execute(array($msgid, $userReceiverID));
+        return $stmt->fetch();
+	}
+	
+	function messageRead($msgid, $userReceiverID){
+		global $db;
+        $stmt = $db->prepare("SELECT * FROM usermessage WHERE usermsgid = ? AND receiverid = ?");
+		$stmt = $db->prepare("UPDATE usermessage SET read = TRUE WHERE usermsgid = ? AND receiverid = ?");
+		$stmt->execute(array($msgid, $userReceiverID));
+	}
+	
 ?>
