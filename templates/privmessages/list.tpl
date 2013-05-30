@@ -39,6 +39,7 @@
 						</div>
 						</div>                                 
 					</div>
+					{/foreach}
 				</div>
                 <div class="span3">
                     <div class="sidebar-content affix">
