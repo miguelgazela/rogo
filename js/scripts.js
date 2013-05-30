@@ -38,9 +38,15 @@ $(document).ready(function() {
     // define the remove action for answers
     addRemoveAnswerHandlers();
 
+    // define the edit action for answers
+    addEditAnswerHandlers();
+
     // define the actions for vote buttons
     addVoteUpHandlers();
     addVoteDownHandlers();
+
+    // define the actions for the comment input area
+    addCommentInputHandlers();
 
     // define the accept answer action
     $(".accept-answer").click(function(event){
@@ -67,7 +73,7 @@ $(document).ready(function() {
         var answerid = $(this).parents(".answer").attr("id").slice(7);
 
         $.post(BASE_URL+"ajax/questions/accept_answer.php", {questionid: questionid, answerid: answerid, intention: intention}, function(response){
-            console.log(response); // TODO remove
+            //console.log(response); // TODO remove
 
             if(response.requestStatus != "OK") {
                 if(intention == "accept") {
@@ -80,56 +86,6 @@ $(document).ready(function() {
                 alert("Ups! An error occurred while trying to update this answer. Please try again later."); // TODO improve warning quality
             }
         });    
-    });
-
-    // TODO this will be made in the php part
-    $(".vote-area").each(function(){
-        var postid = $(this).attr("id").slice(10);
-        $.get(BASE_URL+"ajax/votes/voted_on_post.php", {id: postid}, function(response){
-            //console.log(response); // TODO remove
-            if(response.voted === true) {
-                if(response.type == 1) {
-                    $("#vote-area-"+postid).children(".vote-up").addClass("active");
-                } else if(response.type == 2) {
-                    $("#vote-area-"+postid).children(".vote-down").addClass("active");
-                }
-            }
-        });
-    });
-
-    // event handler for comment textareas
-    $("textarea.inputComment").keypress(function(event){
-        var comment = $(this).val();
-        var inputCommentCtrl = $(this).parents("div.inputComment");
-
-        if(event.which == ENTER_KEY && event.shiftKey) {
-            // do nothing
-        }
-        else if (event.which == ENTER_KEY) {
-           event.preventDefault(); // stops enter from creating a new line
-
-            if(comment.length < 15) {
-                inputCommentCtrl.addClass("error");
-                inputCommentCtrl.children('span.help-block').text("Write at least 15 characters");
-            } else {
-                inputCommentCtrl.removeClass("error");
-                inputCommentCtrl.children('span.help-block').text("");
-                var postid = inputCommentCtrl.parents("div.comments").attr("id").slice(9);
-
-                $.post(BASE_URL+"ajax/comments/add.php", {id: postid, text: comment}, function(response){
-                    //console.log(response); // TODO remove
-                    if(response.requestStatus == "OK") {
-                        var newComment = "<div class='comment' id='comment-"+response.data.commentId+"'>"+response.data.commentText;
-                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span>  <i class='icon-remove-sign'></i></div>";
-                        inputCommentCtrl.parent("form").before(newComment);
-                        $("#comments-"+postid+" textarea").val("");
-                        addRemoveCommentHandlers();
-                    } else {
-                        alert("Ups! An error occurred while trying to add your comment. Please try again later."); // TODO improve warning quality
-                    }
-                });
-            }
-        }
     });
 });
 
@@ -158,7 +114,7 @@ $("form.edit-question").submit(function(event) {
 
 $("#inputQuestionTags").keyup(function(event) {
     if(event.which == SPACE_KEY) {
-        var tag = $("#inputQuestionTags").val().toLowerCase();
+        var tag = stripHTML($("#inputQuestionTags").val().toLowerCase());
         tag = tag.replace(",","");
         if(tag.length > 1) {
 
@@ -190,6 +146,50 @@ $('#inputQuestionTags').keydown(function(event){
     }
 });
 
+function stripHTML(html) {
+    return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi, '');
+}
+
+function cancelQuestionEdit(questionId) {
+    window.location.replace(BASE_URL+"pages/questions/view.php?id="+questionId);
+}
+
+function addCommentInputHandlers() {
+    // event handler for comment textareas
+    $("textarea.inputComment").keypress(function(event){
+        var comment = $(this).val();
+        var inputCommentCtrl = $(this).parents("div.inputComment");
+
+        if(event.which == ENTER_KEY && event.shiftKey) {
+            // do nothing
+        } else if (event.which == ENTER_KEY) {
+           event.preventDefault(); // stops enter from creating a new line
+
+            if(comment.length < 15) {
+                inputCommentCtrl.addClass("error");
+                inputCommentCtrl.children('span.help-block').text("Write at least 15 characters");
+            } else {
+                inputCommentCtrl.removeClass("error");
+                inputCommentCtrl.children('span.help-block').text("");
+                var postid = inputCommentCtrl.parents("div.comments").attr("id").slice(9);
+
+                $.post(BASE_URL+"ajax/comments/add.php", {id: postid, text: comment}, function(response){
+                    console.log(response); // TODO remove
+                    if(response.requestStatus == "OK") {
+                        var newComment = "<div class='comment' id='comment-"+response.data.commentId+"'>"+response.data.commentText;
+                        newComment += " - <a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a><span class='action-time'> "+getPrettyDate(new Date())+"</span>  <i class='icon-remove-sign'></i></div>";
+                        inputCommentCtrl.parent("form").before(newComment);
+                        $("#comments-"+postid+" textarea").val("");
+                        addRemoveCommentHandlers();
+                    } else {
+                        alert("Ups! An error occurred while trying to add your comment. Please try again later."); // TODO improve warning quality
+                    }
+                });
+            }
+        }
+    });
+}
+
 function addRemoveCommentHandlers() {
     $(".comment i").click(function(e){
         var commentId = parseInt($(this).parent(".comment").attr("id").slice(8));
@@ -202,6 +202,20 @@ function addRemoveCommentHandlers() {
             }
         });
     });
+}
+
+function addEditAnswerHandlers() {
+    $(".answer .edit").click(function(e){
+        var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
+        console.log(answerId);
+        $("#answer-"+answerId).find(".answer-body").attr("contenteditable", true);
+    });
+}
+
+function textAreaAdjust(o) {
+    o.style.height = "1px";
+    console.log(o.scrollHeight);
+    o.style.height = (25+o.scrollHeight)+"px";
 }
 
 function addRemoveAnswerHandlers() {
@@ -363,15 +377,15 @@ function addAnswer(questionID) {
         $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle}, function(response) {
             //console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
-                var answer = "<div class='answer' id='"+response.data.answerID+"'>";
-                answer += "<div class='vote-area pull-left' id='vote-area-"+response.data.answerID+"'><span class='vote-up'></span>";
+                var answer = "<div class='answer' id='answer-"+response.data.answerId+"'>";
+                answer += "<div class='vote-area pull-left' id='vote-area-"+response.data.answerId+"'><span class='vote-up'></span>";
                 answer += "<span class='vote-counter text-center'>0</span>";
                 answer += "<span class='vote-down'></span>";
 
                 // get the question owner username
                 username = $(".question-footer .user-info a").text();
                 if(response.data.username == username) {
-                    answer += "<span class='accept-answer' text-center accepted'><i class='icon-ok-circle icon-2x'></i></span>";
+                    answer += "<span class='accept-answer text-center'><i class='icon-ok-circle icon-2x'></i></span>";
                 }
                 
                 answer += '<span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>';
@@ -379,7 +393,17 @@ function addAnswer(questionID) {
                 answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
                 answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
                 answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
-                answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.data.reputation+"</span></div></div></div>";
+                answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.data.reputation+"</span></div></div>";
+
+                // add the comments area
+                answer += '<div class="comments" id="comments-'+response.data.answerId+'">';
+                answer += '<form class="add_comment_form">';
+                answer += '<div class="control-group inputComment">';
+                answer += '<div class="controls">';
+                answer += '<textarea rows="3" placeholder="Write a comment..." class="inputComment" name="comment"></textarea>';
+                answer += '</div><span class="help-block"></span></div></form>';
+                answer += '</div></div>';
+
                 $("div.answers-container").append(answer);
 
                 $("#inputAnswer").val(""); // clear textarea
@@ -393,6 +417,7 @@ function addAnswer(questionID) {
                 }
 
                 addRemoveAnswerHandlers();
+                addCommentInputHandlers();
             } else {
                 alert("Ups! An error occurred while trying to add your answer. Please try again later."); // TODO improve warning quality
             }

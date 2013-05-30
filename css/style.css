@@ -682,7 +682,7 @@ div.question-info div.question-container {
 }
 
 div.question-info .question-container .question-body {
-  text-align: justify;
+  text-align: left;
 }
 
 div.question-info .question-container .tags {
@@ -800,6 +800,10 @@ div.question-info .question-container .question-footer .edited {
   min-height: 150px;
   border-bottom: 1px solid #aaa;
   padding-bottom: 20px;
+}
+
+.answer.not-logged-in {
+  min-height: 60px;
 }
 
 .answer .vote-area {

@@ -36,7 +36,7 @@
         returnIfHasErrors($errors, "pages/questions/add.php");
 
         try {
-            $db->beginTransaction();
+            $db->beginTransaction();          
             $questionid = insertQuestion($question, $details);
             $tags = explode(",", $tags);
 

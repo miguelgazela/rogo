@@ -40,7 +40,7 @@
             $db->commit();
 
             $response['requestStatus'] = "OK";
-            returnOkJSON($response, "Answer was added to database", array("answerId" => $answerid, "answerText" => $text, "username" => $_SESSION['s_username'], "userid" => $_SESSION['s_user_id'], "reputation" => $_SESSION['s_reputation']));
+            returnOkJSON($response, "Answer was added to database", array("answerId" => $answerid, "answerText" => htmlspecialchars(stripslashes($text)), "username" => $_SESSION['s_username'], "userid" => $_SESSION['s_user_id'], "reputation" => $_SESSION['s_reputation']));
         } catch(DatabaseException $e) {
             $db->rollBack();
             returnErrorJSON($response, 7, "Error inserting answer into database", $e->getErrors());

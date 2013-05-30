@@ -22,7 +22,7 @@
                                 <div class="summary">
                                     <div class="media">
                                         <a class="pull-left avatar-frame" href="#">
-                                            <img class="media-object" src="{$question.gravatar}" />
+                                            <img class="media-object" src="{$BASE_URL}img/imageholder.png" />
                                         </a>
                                         <div class="media-body">
                                             <h5 class="media-heading"><a href="{$BASE_URL}pages/questions/view.php?id={$question.questionid}">{$question.title}</a></h5>
@@ -32,11 +32,7 @@
                                 </div>
                                 <div class="question-stats pull-right">
                                     {if $question.answercount > 0}
-                                        {if $question.acceptedanswerid != null}
-                                            <div class="stats-answers answer-accepted">
-                                        {else}
-                                            <div class="stats-answers answered">
-                                        {/if}
+                                        <div class="stats-answers answered">
                                     {else}
                                         <div class="stats-answers">
                                     {/if}
@@ -68,7 +64,7 @@
                                 </div>
 
                                 <div class="started">
-                                    <span class="action-time" title="{$question.creationdate}">{$question.creationdate_p}</span>
+                                    <span class="action-time">{$question.creationdate}</span>
                                     <div class="user-info">
                                         <a href="{$BASE_URL}pages/users/view.php?id={$question.ownerid}" class="username">{$question.username}</a>
                                         <span class="reputation"><i class="icon-trophy"></i> {$question.reputation}</span>

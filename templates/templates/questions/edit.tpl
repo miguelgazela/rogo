@@ -46,7 +46,7 @@
                         </div>
                     </form>
                     <button type="submit" form="ask_question_form" class="btn save">Save</button>
-                    <button type="button" class="btn cancel" onclick="cancelQuestionEdit({$question.postid});">Cancel</button>
+                    <button type="button" class="btn cancel">Cancel</button>
                 </div>
 
                 <div class="span3">

@@ -108,10 +108,12 @@
                                     <span class="vote-down"></span>
                                     <span class="accept-answer text-center accepted"><i class="icon-ok-circle icon-2x"></i></span>
                                     <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
-                                    <span class="edit text-center"><i class="icon-edit icon-2x"></i></span>
+                                    <span class="edit text-center"><i class="icon-save icon-2x"></i></span>
                                 </div>
                                 <div class="answer-container">
-                                    <p class="answer-body">
+                                    <textarea class="editing-answer">In your java code you use a 1024 byte buffer to recieve udp packets, which will only be filled partially if you don't receive enough bytes. receivePacket.getData() simply returns this buffer. When you then convert it to a String, of course the remaining bytes will be filled with whatever was in the buffer before (in this case zero bytes, but could als be filled with content if you used it as receiving buffer before). The correct way to get the received data would be to use the getLength() and getOffset() methods of DatagramPacket:</textarea>
+
+                                    <p class="answer-body hide">
                                         In your java code you use a 1024 byte buffer to recieve udp packets, which will only be filled partially if you don't receive enough bytes. receivePacket.getData() simply returns this buffer. When you then convert it to a String, of course the remaining bytes will be filled with whatever was in the buffer before (in this case zero bytes, but could als be filled with content if you used it as receiving buffer before). The correct way to get the received data would be to use the getLength() and getOffset() methods of DatagramPacket:
                                     </p>
                                     <div class="started">

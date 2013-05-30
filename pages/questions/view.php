@@ -7,6 +7,7 @@
     include_once($BASE_PATH . 'database/answers.php');    
     include_once($BASE_PATH . 'database/comments.php');
     include_once($BASE_PATH . 'database/tags.php');
+    include_once($BASE_PATH . 'database/votes.php');
 
     $id = $_GET['id'];
 
@@ -19,16 +20,17 @@
             exit();
         }
         incQuestionViews($id);
-        $question['creationdate'] = getPrettyDate($question['creationdate']);
-        $question['lasteditdate'] = getPrettyDate($question['lasteditdate']);
+
+        $question['creationdate_p'] = getPrettyDate($question['creationdate']);
+        $question['lasteditdate_p'] = getPrettyDate($question['lasteditdate']);
+        $question['title'] = htmlspecialchars(stripslashes($question['title']));
+        $question['body'] = htmlspecialchars(stripslashes($question['body']));
+        $question['gravatar'] = "http://www.gravatar.com/avatar/".md5(strtolower(trim($question['email'])))."?s=48&r=pg&d=identicon";
     } catch(Exception $e) {
         $smarty->assign('warning_msg', "He need a valid question id to show you something useful");
         $smarty->display("showWarning.tpl");
         exit();
     }
-
-   
-    
 
     // get answers, votes, comments and dates to array
     $answers = getAnswersOfQuestion($id);
@@ -37,25 +39,34 @@
 
     $questionComments = getCommentsOfPost($id);
     foreach($questionComments as &$comment) {
-        $comment['creationdate'] = getPrettyDate($comment['creationdate']);
+        $comment['creationdate_p'] = getPrettyDate($comment['creationdate']);
+        $comment['body'] = htmlspecialchars(stripslashes($comment['body']));
     }
 
+    // add comments to this question and check if user has voted on it
     $comments[] = $questionComments;
-
-    // not working this
-    $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$id), true);
+    if(($vote = getVoteOfPost($id))) {
+        $votes[] = array("voted" => true, "votetype" => $vote['votetype']);
+    } else {
+        $votes[] = array("voted" => false);
+    }
 
     foreach($answers as &$answer) {
         $answerComments = getCommentsOfPost($answer['postid']);
         foreach($answerComments as &$comment) {
-            $comment['creationdate'] = getPrettyDate($comment['creationdate']);
+            $comment['creationdate_p'] = getPrettyDate($comment['creationdate']);
         }
         $comments[] = $answerComments;
-        $answer['creationdate'] = getPrettyDate($answer['creationdate']);
-        $answer['lasteditdate'] = getPrettyDate($answer['lasteditdate']);
+        $answer['creationdate_p'] = getPrettyDate($answer['creationdate']);
+        $answer['lasteditdate_p'] = getPrettyDate($answer['lasteditdate']);
+        $answer['body'] = htmlspecialchars(stripslashes($answer['body']));
 
-        // not working this
-        $votes[] = json_decode(file_get_contents("{$BASE_URL}ajax/votes/voted_on_post.php?id=".$answer['postid']), true);
+        //  working this
+        if(($vote = getVoteOfPost($answer['postid']))) {
+            $votes[] = array("voted" => true, "votetype" => $vote['votetype']);
+        } else {
+            $votes[] = array("voted" => false);
+        }
     }
 
     // send data to smarty and display template

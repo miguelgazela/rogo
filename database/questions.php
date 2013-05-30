@@ -62,9 +62,9 @@
         return $postId;
     }
 
-    function getQuestionsWithSorting($sort) {
+    function getQuestionsWithSorting($sort, $limit, $offset) {
         global $db;
-        $query = "SELECT question.*, post.*, username, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ";
+        $query = "SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ";
 
         switch ($sort) {
             case 'newest':
@@ -77,15 +77,38 @@
                 $query = $query."ORDER BY post.lastactivitydate DESC";
                 break;
             case 'unanswered':
-                $query = $query."AND answercount = 0 ORDER BY creationdate DESC;";
+                $query = $query."AND answercount = 0 ORDER BY creationdate DESC";
                 break;
             default:
                 throw new Exception("getQuestionsWithSorting: Invalid sorting");
                 break;
         }
-        
+
+        if($limit != null && $offset != null) {
+            $query = $query."LIMIT ? OFFSET ?";
+        }
+
+        $stmt = $db->prepare($query);
+
+        if($limit != null && $offset != null) {
+            $stmt->execute(array($limit, $offset));
+        } else {
+            $stmt->execute();
+        }
+        return $stmt->fetchAll();
+    }
+
+    function getQuestionsCount($unanswered) {
+        global $db;
+
+        if($unanswered != null) {
+            $query = "SELECT COUNT(*) AS num FROM question";
+        } else {
+            $query = "SELECT COUNT(*) AS num FROM question WHERE answercount = 0";
+        }
+
         $result = $db->query($query);
-        return $result->fetchAll();
+        return $result->fetch();
     }
 
     function getQuestionById($id) {
@@ -94,7 +117,7 @@
             throw new Exception("invalid_id");
         }
 
-        $stmt = $db->prepare("SELECT question.*, post.*, username, reputation FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND questionid = ?");
+        $stmt = $db->prepare("SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND questionid = ?");
         $stmt->execute(array($id));
         return $stmt->fetch();
     }

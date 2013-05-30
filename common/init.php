@@ -46,6 +46,15 @@
         }
     }
 
+    function getSmallerText($text, $n) {
+
+        if(strlen($text) <= $n) {
+            return $text;
+        } else {
+            return (substr($text, 0, $n)."...");
+        }
+    }
+
     function getPrettyDate($date) {
         $now = time();
         $diff_sec = $now - strtotime($date);
