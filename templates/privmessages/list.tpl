@@ -24,7 +24,7 @@
 							<span class="action-time">{$message.creationdate}</span>
 						</div>
 						<div class="priv_message_info_2 pull-left">
-							<a href="#" class="subject">{$message.subject}</a>
+							<a href="{$BASE_URL}pages/privmessages/view.php?id={$message.usermsgid}" class="subject">{$message.subject}</a>
 							<span class="message-excerpt">A small excerpt of this message...</span>
 						</div>
 						<div class="priv_message_actions pull-left">
