@@ -20,11 +20,11 @@
 						
 						<img class="media-object pull-left" src="../img/imageholder.png">
 						<div class="priv_message_info_1 pull-left">
-							<a href="#" class="username">$message.username</a>
-							<span class="action-time">$message.creationdate</span>
+							<a href="#" class="username">{$message.username}</a>
+							<span class="action-time">{$message.creationdate}</span>
 						</div>
 						<div class="priv_message_info_2 pull-left">
-							<a href="#" class="subject">$message.creationdate</a>
+							<a href="#" class="subject">{$message.subject}</a>
 							<span class="message-excerpt">A small excerpt of this message...</span>
 						</div>
 						<div class="priv_message_actions pull-left">
@@ -38,12 +38,12 @@
 							</div>
 						</div>
 						</div>                                 
-					</div>
 					{/foreach}
-				</div>
+					</div>
+					</div>
                 <div class="span3">
                     <div class="sidebar-content affix">
-                        <a href="{$BASE_URL}pages/questions/add.php">Ask Question</a>
+                       <a href="#" class="ask-question-btn">Ask Question</a>
                     </div>
                 </div>
             </div>
