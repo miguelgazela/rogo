@@ -24,7 +24,7 @@
         $question['creationdate_p'] = getPrettyDate($question['creationdate']);
         $question['lasteditdate_p'] = getPrettyDate($question['lasteditdate']);
         $question['title'] = htmlspecialchars(stripslashes($question['title']));
-        $question['body'] = htmlspecialchars(stripslashes($question['body']));
+        $question['body'] = nl2br(htmlspecialchars(stripslashes($question['body'])));
         $question['gravatar'] = "http://www.gravatar.com/avatar/".md5(strtolower(trim($question['email'])))."?s=48&r=pg&d=identicon";
     } catch(Exception $e) {
         $smarty->assign('warning_msg', "He need a valid question id to show you something useful");

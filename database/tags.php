@@ -4,10 +4,9 @@
     function insertTag($tagname) {
         global $db;
         $errors = new DatabaseException();
-        // TODO validateTag
         
         try {
-            $stmt = $db->prepare("INSERT INTO tag (tagname) VALUES (?)");
+            $stmt = $db->prepare("INSERT INTO tag (tagname, creationdate) VALUES (?, now())");
             $stmt->execute(array($tagname));
             return $db->lastInsertId('tag_tagid_seq');
         } catch(Exception $e) {
@@ -25,6 +24,46 @@
             $errors->addError('questiontag', 'error processing insert into questiontag table');
             throw($errors);
         }
+    }
+
+    function getTagsWithSorting($sort, $limit, $offset) {
+        global $db;
+        $query = "SELECT tag.*, COUNT(*) AS used FROM tag, questiontag WHERE tag.tagid = questiontag.tagid ";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
+
+        switch ($sort) {
+            case 'popular':
+                $query = $query."GROUP BY tag.tagid ORDER BY used DESC, tagname";
+                break;
+            case 'name':
+                $query = $query."GROUP BY tag.tagid ORDER BY tagname";
+                break;
+            case 'new':
+                $query = $query."AND creationdate > ? GROUP BY tag.tagid ORDER BY creationdate DESC";
+                break;
+            default:
+                throw new Exception("getTagsWithSorting: Invalid sorting");
+                break;
+        }
+
+        if($limit != null && $offset != null) {
+            $query = $query."LIMIT ? OFFSET ?";
+        }
+
+        $stmt = $db->prepare($query);
+
+        if($limit != null && $offset != null) {
+            if($sort == 'new')
+                $stmt->execute(array($now, $limit, $offset));
+            else
+                $stmt->execute(array($limit, $offset));
+        } else {
+            if($sort == 'new')
+                $stmt->execute(array($now));
+            else
+                $stmt->execute();
+        }
+        return $stmt->fetchAll();
     }
 
     function removeTagFromQuestion($questionid, $tagid) {

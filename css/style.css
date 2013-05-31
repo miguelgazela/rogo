@@ -1093,9 +1093,9 @@ div.rogo-warning {
 input.find-user {
   padding: 5px 10px;
   width: 200px;
-  -webkit-border-radius: 0px;
-     -moz-border-radius: 0px;
-          border-radius: 0px;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
@@ -1115,6 +1115,28 @@ input.find-user {
   margin: 0;
   padding: 0;
 }
+
+/***********************************************************************
+ *
+ *                      TAGS SECTION
+ *
+ * 
+ ***********************************************************************/
+
+ #tags {
+  margin-top: 5px;
+  padding: 5px;
+ }
+
+ .tag {
+  width: 169px;
+  display: inline-block;
+ }
+
+ .tag span, .tag p {
+  font-size: 12px;
+  color: #a6a6a6;
+ }
 
 /***********************************************************************
  *

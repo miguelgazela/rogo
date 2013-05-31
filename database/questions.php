@@ -65,10 +65,11 @@
     function getQuestionsWithSorting($sort, $limit, $offset) {
         global $db;
         $query = "SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
 
         switch ($sort) {
             case 'newest':
-                $query = $query."ORDER BY post.creationdate DESC";
+                $query = $query."AND creationdate > ? ORDER BY post.creationdate DESC";
                 break;
             case 'votes':
                 $query = $query."ORDER BY post.score DESC";
@@ -91,9 +92,15 @@
         $stmt = $db->prepare($query);
 
         if($limit != null && $offset != null) {
-            $stmt->execute(array($limit, $offset));
+            if($sort == 'newest')
+                $stmt->execute(array($now, $limit, $offset));
+            else
+                $stmt->execute(array($limit, $offset));
         } else {
-            $stmt->execute();
+            if($sort == 'newest')
+                $stmt->execute(array($now));
+            else
+                $stmt->execute();
         }
         return $stmt->fetchAll();
     }

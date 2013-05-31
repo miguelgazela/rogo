@@ -6,7 +6,7 @@
                 <ul class="nav">
                     <li class="_questions"><a href="{$BASE_URL}index.php"><i class="icon-question-sign"></i> Questions</a></li>
                     <li class="_users"><a href="{$BASE_URL}pages/users/list.php?sort=reputation"><i class="icon-group"></i> Users</a></li>
-                    <li class="_tags"><a href=""><i class="icon-tags"></i> Tags</a></li>
+                    <li class="_tags"><a href="{$BASE_URL}pages/tags/list.php?sort=popular"><i class="icon-tags"></i> Tags</a></li>
 
                     {if $s_username == ""}
                         <li class="_signin"><a href="{$BASE_URL}pages/auth/signin.php"><i class="icon-signin"></i> Log in</a></li>

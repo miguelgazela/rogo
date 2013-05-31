@@ -38,13 +38,14 @@
     function getUsersWithSorting($sort, $limit, $offset) {
         global $db;
         $query = "SELECT userid, username, email, registrationdate, reputation, lastaccess, upvotes, downvotes, viewcount FROM rogouser ";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
 
         switch ($sort) {
             case 'reputation':
                 $query = $query."ORDER BY reputation DESC";
                 break;
             case 'new':
-                $query = $query."ORDER BY registrationdate DESC";
+                $query = $query."WHERE registrationdate > ? ORDER BY registrationdate DESC";
                 break;
             case 'active':
                 $query = $query."ORDER BY lastaccess DESC";
@@ -67,9 +68,15 @@
         $stmt = $db->prepare($query);
 
         if($limit != null && $offset != null) {
-            $stmt->execute(array($limit, $offset));
+            if($sort == 'new')
+                $stmt->execute(array($now, $limit, $offset));
+            else
+                $stmt->execute(array($limit, $offset));
         } else {
-            $stmt->execute();
+            if($sort == 'new')
+                $stmt->execute(array($now));
+            else
+                $stmt->execute();
         }
         return $stmt->fetchAll();
     }

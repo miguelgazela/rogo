@@ -159,13 +159,30 @@ function findUsers(input) {
     text = text.toLowerCase();
 
     $('.username').each(function(){
-        if(text == "") {
+        if(text === "") {
             $(this).parents(".user").show();
         } else {
             if($(this).text().toLowerCase().indexOf(text) == -1) {
                 $(this).parents(".user").hide();
             } else {
                 $(this).parents(".user").show();
+            }
+        }
+    });
+}
+
+function findTags(input) {
+    var text = $(input).val();
+    text = text.toLowerCase();
+
+    $('.post-tag').each(function(){
+        if(text === "") {
+            $(this).parents(".tag").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".tag").hide();
+            } else {
+                $(this).parents(".tag").show();
             }
         }
     });
@@ -467,7 +484,7 @@ function validateUsername() {
     var inputUsername = $('#inputUsername');
     var validUsernamePattern = /^[A-Z0-9a-z_.]{4,20}$/; /* allows spaces and underscores, digits, no special chars, 4 to 20 chars long */
 
-    if(!validUsernamePattern.test(inputUsername.val())) { 
+    if(!validUsernamePattern.test(inputUsername.val())) {
         $('div.inputUsername').addClass("error");
         $('div.inputUsername span.help-block').text('Invalid username. Between 4 and 20 alfanumeric chars, underscores and points.');
         return false;
@@ -476,7 +493,7 @@ function validateUsername() {
         $('div.inputUsername span.help-block').text('');
         return true;
     }
-} 
+}
 
 function validateEmail() {
 
@@ -533,7 +550,6 @@ function validateQuestion() {
         $('div.inputQuestionTitle span.help-block').text("");
         return true;
     }
-    
 }
 
 function validateQuestionDetails() {
