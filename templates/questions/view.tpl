@@ -94,10 +94,10 @@
                     </div>
                     <div class="question-answers">
                         <div class="answers-header">
-                            {if $question.answercount == 1}
-                                <h4><span class="answers-counter">{$question.answercount}</span> Answer</h4>
+                            {if $num_answers == 1}
+                                <h4><span class="answers-counter">{$num_answers}</span> Answer</h4>
                             {else}
-                                <h4><span class="answers-counter">{$question.answercount}</span> Answers</h4>
+                                <h4><span class="answers-counter">{$num_answers}</span> Answers</h4>
                             {/if}
                         </div>
                         <div class="answers-container">
@@ -196,7 +196,7 @@
                     <form id="add_answer_form" action="/">
                         <div class="control-group inputAnswer">
                             <div class="controls">
-                                <textarea rows="8" placeholder="Write an answer..." id="inputAnswer" name="answer"></textarea>
+                                <textarea rows="8" placeholder="Write an answer..." id="inputAnswer" name="answer">{$draft_text}</textarea>
                             </div>
                             <span class="help-block"></span>
                         </div>
@@ -204,8 +204,8 @@
                             <input type="checkbox" value="" name="anonymously">
                             Add Anonymously
                         </label>
-                        <button type="button" class="btn" onclick="return addAnswer({$question.questionid})">Post answer</button>
-                        <button type="button" class="btn">Save draft</button>
+                        <button type="button" class="btn" onclick="addAnswer({$question.questionid}, false);">Post answer</button>
+                        <button type="button" class="btn" onclick="addAnswer({$question.questionid}, true)">Save draft</button>
                     </form>
                     {/if}
                 </div>

@@ -3,7 +3,7 @@
     include_once('../../common/init.php');
     include_once($BASE_PATH . 'common/DatabaseException.php');
 
-    function insertAnswer($questionid, $text, $title) {
+    function insertAnswer($questionid, $text, $title, $draft) {
         global $db;
         $errors = new DatabaseException();
         $postid;
@@ -38,14 +38,73 @@
 
         // insert the new answer
         try {
-            $stmt = $db->prepare("INSERT INTO answer (answerid, questionid) VALUES (?, ?)");
-            $stmt->execute(array($postid, $questionid));
+            $stmt = $db->prepare("INSERT INTO answer (answerid, questionid, draft) VALUES (?, ?, ?)");
+            $stmt->execute(array($postid, $questionid, $draft));
         } catch(Exception $e) {
             $errors->addError('question', 'error processing insert into question table');
             $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
         return $postid;
+    }
+
+    function getAnswerByUser($postid) {
+        global $db;
+
+        if(!is_numeric($postid)) {
+            throw new Exception("invalid_id");
+        }
+
+        $stmt = $db->prepare("SELECT answerid, draft, ownerid FROM post, answer WHERE questionid = ? AND postid = answerid AND ownerid = ?");
+        $stmt->execute(array($postid, $_SESSION['s_user_id']));
+        return $stmt->fetch();
+    }
+
+    function updateAnswerDraft($answerid, $text) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($answerid)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE post SET body = ? WHERE postid = ? AND post.ownerid = ?");
+            $stmt->execute(array($text, $answerid, $_SESSION['s_user_id']));
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing update on answer table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function getAnswerDraft($questionid) {
+        global $db;
+        if(!is_numeric($questionid)) {
+            throw new Exception("invalid_id");
+        }
+
+        $stmt = $db->prepare("SELECT post.body FROM answer, post, rogouser WHERE answerid = postid AND post.ownerid = rogouser.userid AND questionid = ? AND ownerid = ? AND draft = true");
+        $stmt->execute(array($questionid, $_SESSION['s_user_id']));
+        return $stmt->fetch();
+    }
+
+    function setDraftAsAnswer($answerid) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($answerid)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE answer SET draft = false WHERE answerid = ?");
+            $stmt->execute(array($answerid));
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing update on answer table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
     }
 
     function getAnswerById($id) {
@@ -61,7 +120,7 @@
 
     function getAnswersOfQuestion($questionid) {
         global $db;
-        $result = $db->prepare("SELECT post.*, answer.accepted, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid ORDER BY score DESC, lastactivitydate DESC");
+        $result = $db->prepare("SELECT post.*, answer.accepted, rogouser.username, rogouser.reputation FROM answer, post, rogouser WHERE answerid = postid AND questionid = ? AND ownerid = userid AND draft = false ORDER BY score DESC, lastactivitydate DESC");
         $result->execute(array($questionid));
         return $result->fetchAll();
     }
@@ -79,6 +138,7 @@
         } catch(Exception $e) {
             $db->rollBack();
             $errors->addError('vote', 'error processing delete from answer table');
+            $errors->addError("database_errors", $e);
             throw ($errors);
         }
 

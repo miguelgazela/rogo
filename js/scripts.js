@@ -397,7 +397,7 @@ function getPrettyDate(date) {
     }
 }
 
-function addAnswer(questionID) {
+function addAnswer(questionID, draft) {
     var answerText = $("#inputAnswer").val();
     var questionTitle = $(".question-header h3").text();
 
@@ -409,52 +409,65 @@ function addAnswer(questionID) {
         $(".inputAnswer > span.help-block").text("");
         $(".inputAnswer").removeClass("error");
 
-        $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle}, function(response) {
-            //console.log(response); // TODO remove
+        console.log("Draft: "+draft);
+
+        $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle, isdraft: draft}, function(response) {
+            console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
-                var answer = "<div class='answer' id='answer-"+response.data.answerId+"'>";
-                answer += "<div class='vote-area pull-left' id='vote-area-"+response.data.answerId+"'><span class='vote-up'></span>";
-                answer += "<span class='vote-counter text-center'>0</span>";
-                answer += "<span class='vote-down'></span>";
-
-                // get the question owner username
-                username = $(".question-footer .user-info a").text();
-                if(response.data.username == username) {
-                    answer += "<span class='accept-answer text-center'><i class='icon-ok-circle icon-2x'></i></span>";
-                }
-                
-                answer += '<span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>';
-                answer += '<span class="edit text-center"><i class="icon-edit icon-2x"></i></span></div>';
-                answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
-                answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
-                answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
-                answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.data.reputation+"</span></div></div>";
-
-                // add the comments area
-                answer += '<div class="comments" id="comments-'+response.data.answerId+'">';
-                answer += '<form class="add_comment_form">';
-                answer += '<div class="control-group inputComment">';
-                answer += '<div class="controls">';
-                answer += '<textarea rows="3" placeholder="Write a comment..." class="inputComment" name="comment"></textarea>';
-                answer += '</div><span class="help-block"></span></div></form>';
-                answer += '</div></div>';
-
-                $("div.answers-container").append(answer);
-
-                $("#inputAnswer").val(""); // clear textarea
-
-                // update answer counter
-                var current = parseInt($("span.answers-counter").text());
-                if(current == 1) {
-                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answer");
+                if(draft) { // inform the draft was saved
+                    $(".inputAnswer > span.help-block").text("Draft saved!");
+                    setTimeout(function() { 
+                        $(".inputAnswer > span.help-block").text("");
+                    }, 7000);
                 } else {
-                    $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answers");
-                }
+                    var answer = "<div class='answer' id='answer-"+response.data.answerId+"'>";
+                    answer += "<div class='vote-area pull-left' id='vote-area-"+response.data.answerId+"'><span class='vote-up'></span>";
+                    answer += "<span class='vote-counter text-center'>0</span>";
+                    answer += "<span class='vote-down'></span>";
 
-                addRemoveAnswerHandlers();
-                addCommentInputHandlers();
+                    // get the question owner username
+                    username = $(".question-footer .user-info a").text();
+                    if(response.data.username == username) {
+                        answer += "<span class='accept-answer text-center'><i class='icon-ok-circle icon-2x'></i></span>";
+                    }
+                    
+                    answer += '<span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>';
+                    answer += '<span class="edit text-center"><i class="icon-edit icon-2x"></i></span></div>';
+                    answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
+                    answer += "<div class='started'><span class='action-time'>"+getPrettyDate(new Date())+"</span>";
+                    answer += "<div class='user-info'><a href='"+BASE_URL+"pages/users/view.php?id="+response.data.userid+"' class='username'>"+response.data.username+"</a>";
+                    answer += "<span class='reputation'><i class='icon-trophy'></i> "+response.data.reputation+"</span></div></div>";
+
+                    // add the comments area
+                    answer += '<div class="comments" id="comments-'+response.data.answerId+'">';
+                    answer += '<form class="add_comment_form">';
+                    answer += '<div class="control-group inputComment">';
+                    answer += '<div class="controls">';
+                    answer += '<textarea rows="3" placeholder="Write a comment..." class="inputComment" name="comment"></textarea>';
+                    answer += '</div><span class="help-block"></span></div></form>';
+                    answer += '</div></div>';
+
+                    $("div.answers-container").append(answer);
+
+                    $("#inputAnswer").val(""); // clear textarea
+
+                    // update answer counter
+                    var current = parseInt($("span.answers-counter").text());
+                    if(current == 1) {
+                        $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answer");
+                    } else {
+                        $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answers");
+                    }
+
+                    addRemoveAnswerHandlers();
+                    addCommentInputHandlers();
+                }
             } else {
-                alert("Ups! An error occurred while trying to add your answer. Please try again later."); // TODO improve warning quality
+                if(response.errorCode == 10) {
+                    alert("You've already answered this question. Please edit your previous answer to add new info");
+                } else {
+                    alert("Ups! An error occurred with your answer. Please try again later."); // TODO improve warning quality
+                }
             }
         });
     }

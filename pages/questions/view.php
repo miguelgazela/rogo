@@ -59,9 +59,8 @@
         $comments[] = $answerComments;
         $answer['creationdate_p'] = getPrettyDate($answer['creationdate']);
         $answer['lasteditdate_p'] = getPrettyDate($answer['lasteditdate']);
-        $answer['body'] = htmlspecialchars(stripslashes($answer['body']));
+        $answer['body'] = nl2br(htmlspecialchars(stripslashes($answer['body'])));
 
-        //  working this
         if(($vote = getVoteOfPost($answer['postid']))) {
             $votes[] = array("voted" => true, "votetype" => $vote['votetype']);
         } else {
@@ -69,10 +68,17 @@
         }
     }
 
+    // get a possible draft for this question and user
+    $draft = getAnswerDraft($id);
+    if($draft) {
+        $smarty->assign("draft_text", htmlspecialchars(stripslashes($draft['body'])));
+    }
+
     // send data to smarty and display template
     $smarty->assign('question', $question);
     $smarty->assign('tags',getTagsOfQuestion($id));
     $smarty->assign('answers', $answers);
+    $smarty->assign("num_answers", count($answers));
     $smarty->assign("comments", $comments);
     $smarty->assign("votes", $votes);
 
