@@ -1072,8 +1072,49 @@ div.rogo-warning {
   color: #306aa2;
  }
 
+/***********************************************************************
+ *
+ *                      USERS SECTION
+ *
+ * 
+ ***********************************************************************/
 
+#users {
+  margin-top: 5px;
+  padding: 5px;
+}
 
+.user {
+  display: inline-block;
+  width: 226px;
+  margin-top: 8px;
+}
+
+input.find-user {
+  padding: 5px 10px;
+  width: 200px;
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
+#users .avatar-frame, #users .avatar-frame img {
+  width: 60px;
+  height: 60px;
+}
+
+#users .user .username {
+  margin: 0;
+}
+
+#users .user p {
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
 
 /***********************************************************************
  *

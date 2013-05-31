@@ -35,6 +35,45 @@
         return $followableid;
     }
 
+    function getUsersWithSorting($sort, $limit, $offset) {
+        global $db;
+        $query = "SELECT userid, username, email, registrationdate, reputation, lastaccess, upvotes, downvotes, viewcount FROM rogouser ";
+
+        switch ($sort) {
+            case 'reputation':
+                $query = $query."ORDER BY reputation DESC";
+                break;
+            case 'new':
+                $query = $query."ORDER BY registrationdate DESC";
+                break;
+            case 'active':
+                $query = $query."ORDER BY lastaccess DESC";
+                break;
+            case 'voters':
+                $query = $query."ORDER BY upvotes DESC, downvotes DESC";
+                break;
+            case 'popular':
+                $query = $query."ORDER BY viewcount DESC";
+                break;
+            default:
+                throw new Exception("getUsersWithSorting: Invalid sorting");
+                break;
+        }
+
+        if($limit != null && $offset != null) {
+            $query = $query."LIMIT ? OFFSET ?";
+        }
+
+        $stmt = $db->prepare($query);
+
+        if($limit != null && $offset != null) {
+            $stmt->execute(array($limit, $offset));
+        } else {
+            $stmt->execute();
+        }
+        return $stmt->fetchAll();
+    }
+
     function getUserInfoByLogin($login, $pass_hash) {
         global $db;
         $response = array();
@@ -46,15 +85,17 @@
         if($user) {
             $response['result'] = 'OK';
             $response['user'] = $user;
-            /*
-            $response['userid'] = $user['userid'];
-            $response['permissiontype'] = $user['permissiontype'];
-            $response['reputation'] = $user['reputation'];
-            */
         } else {
             $response['result'] = 'NOK';
         }
         return $response;
+    }
+
+    function updateLastAccess($username) {
+        global $db;
+
+        $stmt = $db->prepare("UPDATE rogouser SET lastaccess = now() WHERE username = ?");
+        $stmt->execute(array($username));
     }
 
     function getUserByUsername($username) {

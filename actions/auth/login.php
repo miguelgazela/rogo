@@ -10,6 +10,7 @@
     $userInfo = getUserInfoByLogin($username, sha1($password));
 
     if ($userInfo['result'] == "OK") {
+        updateLastAccess($username);
         $_SESSION['s_username'] = $username;
         $_SESSION['s_user_permission'] = $userInfo['user']['permissiontype'];
         $_SESSION['s_user_id'] = $userInfo['user']['userid'];

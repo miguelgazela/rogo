@@ -3,7 +3,7 @@
    
     {include file="../header.tpl" title="Rogo - {$sort_method} Questions"}
 
-    <body>
+    <body class="_questions">
         {include file="../navbar.tpl"}
         
         <div class="container">

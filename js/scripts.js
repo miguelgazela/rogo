@@ -154,6 +154,23 @@ function cancelQuestionEdit(questionId) {
     window.location.replace(BASE_URL+"pages/questions/view.php?id="+questionId);
 }
 
+function findUsers(input) {
+    var text = $(input).val();
+    text = text.toLowerCase();
+
+    $('.username').each(function(){
+        if(text == "") {
+            $(this).parents(".user").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".user").hide();
+            } else {
+                $(this).parents(".user").show();
+            }
+        }
+    });
+}
+
 function addCommentInputHandlers() {
     // event handler for comment textareas
     $("textarea.inputComment").keypress(function(event){
@@ -207,6 +224,7 @@ function addRemoveCommentHandlers() {
 function addEditAnswerHandlers() {
     $(".answer .edit").click(function(e){
         var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
+
         console.log(answerId);
         $("#answer-"+answerId).find(".answer-body").attr("contenteditable", true);
     });

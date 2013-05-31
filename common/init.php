@@ -55,6 +55,11 @@
         }
     }
 
+    function getNormalDate($date) {
+        $date = getdate(strtotime($date));
+        return $date[mday]." ".substr($date[month], 0, 3)." ".$date[year];
+    }
+
     function getPrettyDate($date) {
         $now = time();
         $diff_sec = $now - strtotime($date);
