@@ -25,13 +25,16 @@
                                 <p class="created" title="{$tag.creationdate}">{$tag.creationdate_p}</p>
                             </div>
                         {/foreach}
+                        {if $total_number_tags != $number_tags}
+                            <a href="{$BASE_URL}pages/tags/list.php?sort={$sort_method}&page={$page+1}" class="load-questions">Load more tags...</a>
+                        {/if}
                     </section>
                 </div>
                 <div class="span3">
                     <div class="sidebar-content affix">
                         <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                         <div class="questions-count">
-                            <h3 class="questions-counter">{$number_tags}</h3>
+                            <h3 class="questions-counter">{$total_number_tags}</h3>
                             <p>tags</p>
                         </div>
                     </div>

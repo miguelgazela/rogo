@@ -26,6 +26,34 @@
         }
     }
 
+    function getNumberOfTagsWithSorting($sort) {
+        global $db;
+        $query = "SELECT COUNT(*) AS total FROM tag, questiontag WHERE tag.tagid = questiontag.tagid ";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
+
+        switch ($sort) {
+            case 'popular':
+            case 'name':
+                $query = $query."GROUP BY tag.tagid";
+                break;
+            case 'new':
+                $query = $query."AND creationdate > ? GROUP BY tag.tagid";
+                break;
+            default:
+                throw new Exception("getTagsWithSorting: Invalid sorting");
+                break;
+        }
+
+        $stmt = $db->prepare($query);
+        if($sort == 'new')
+            $stmt->execute(array($now));
+        else
+            $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    //SELECT tag.*, COUNT(*) AS used FROM tag LEFT OUTER JOIN questiontag ON (tag.tagid = questiontag.tagid) GROUP BY tag.tagid ORDER BY used DESC, tagname
+
     function getTagsWithSorting($sort, $limit, $offset) {
         global $db;
         $query = "SELECT tag.*, COUNT(*) AS used FROM tag, questiontag WHERE tag.tagid = questiontag.tagid ";
