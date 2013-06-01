@@ -138,6 +138,13 @@
         return $result->fetch();
     }
 
+    function getUserById($id) {
+        global $db;
+        $result = $db->prepare("SELECT * FROM rogouser WHERE userid = ?");
+        $result->execute(array($id));
+        return $result->fetch();
+    }
+
     function getUserByEmail($email) {
         global $db;
         $result = $db->prepare("SELECT * FROM rogouser WHERE email = ?");

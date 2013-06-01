@@ -46,7 +46,7 @@
                             </div>
                             <div class="question-footer">
                                 <div class="started">
-                                    <span class="action-time" title="{$question.creationdate}">{$question.creationdate_p}</span>
+                                    <span class="action-time" title="{$question.creationdate}">asked {$question.creationdate_p}</span>
                                     <div class="user-info">
                                         <a href="{$BASE_URL}pages/users/view.php?id={$question.ownerid}" class="username">{$question.username}</a>
                                         <span class="reputation"><i class="icon-trophy"></i> {$question.reputation}</span>
@@ -54,11 +54,11 @@
                                 </div>
                                 {if $question.creationdate != $question.lasteditdate}
                                     <div class="started edited">
-                                        <span class="action-time" title="{$question.lasteditdate}">{$question.lasteditdate_p}</span>
+                                        <span class="action-time" title="{$question.lasteditdate}">edited {$question.lasteditdate_p}</span>
                                         <div class="user-info">
-                                            <a href="{$BASE_URL}pages/users/view.php?id={$question.lasteditorid}" class="username">{$question.lasteditorid}</a>
+                                            <a href="{$BASE_URL}pages/users/view.php?id={$question.lasteditorid}" class="username">{$editors[0].username}</a>
                                             <!-- needs more information from the php page file-->
-                                            <span class="reputation"><i class="icon-trophy"></i> 1200</span>
+                                            <span class="reputation"><i class="icon-trophy"></i> {$editors[0].reputation}</span>
                                         </div>
                                     </div>
                                 {/if}
@@ -144,7 +144,7 @@
                                 <div class="answer-container">
                                     <p class="answer-body">{$answer.body}</p>
                                     <div class="started">
-                                        <span class="action-time" title="{$answer.creationdate}">{$answer.creationdate_p}</span>
+                                        <span class="action-time" title="{$answer.creationdate}">answered {$answer.creationdate_p}</span>
                                         <div class="user-info">
                                             <a href="{$BASE_URL}pages/users/view.php?id={$answer.ownerid}" class="username">{$answer.username}</a>
                                             <span class="reputation"><i class="icon-trophy"></i> {$answer.reputation}</span>
@@ -152,10 +152,10 @@
                                     </div>
                                     {if $answer.creationdate != $answer.lasteditdate}
                                         <div class="started edited">
-                                            <span class="action-time" title="{$answer.lasteditdate}">{$answer.lasteditdate_p}</span>
+                                            <span class="action-time" title="{$answer.lasteditdate}">edited {$answer.lasteditdate_p}</span>
                                             <div class="user-info">
-                                                <a href="{$BASE_URL}pages/users/view.php?id={$answer.lasteditorid}" class="username">{$answer.lasteditorid}</a>
-                                                <span class="reputation"><i class="icon-trophy"></i> 1409</span>
+                                                <a href="{$BASE_URL}pages/users/view.php?id={$answer.lasteditorid}" class="username">{$editors[$answer@index+1].username}</a>
+                                                <span class="reputation"><i class="icon-trophy"></i> {$editors[$answer@index+1].reputation}</span>
                                             </div>
                                         </div>
                                     {/if}

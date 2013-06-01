@@ -856,7 +856,7 @@ div.question-info .question-container .question-footer .edited {
 
 .answers-container .answer .edited {
   display:inline-block;
-  width: 315px;
+  width: 300px;
   padding-left: 5px;
   border: 1px solid #aaa;
   border-right: 0;

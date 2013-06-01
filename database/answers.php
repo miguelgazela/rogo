@@ -69,8 +69,8 @@
         }
 
         try {
-            $stmt = $db->prepare("UPDATE post SET body = ? WHERE postid = ? AND post.ownerid = ?");
-            $stmt->execute(array($text, $answerid, $_SESSION['s_user_id']));
+            $stmt = $db->prepare("UPDATE post SET body = ?, lastactivitydate = now(), lasteditdate = now(), lasteditorid = ? WHERE postid = ? AND post.ownerid = ?");
+            $stmt->execute(array($text, $_SESSION['s_user_id'], $answerid, $_SESSION['s_user_id']));
         } catch(Exception $e) {
             $errors->addError('answer', 'error processing update on answer table');
             $errors->addError('exception', $e->getMessage());
@@ -98,7 +98,7 @@
         }
 
         try {
-            $stmt = $db->prepare("UPDATE answer SET draft = false WHERE answerid = ?");
+            $stmt = $db->prepare("UPDATE answer SET draft = false, lasteditdate = creationdate WHERE answerid = ?");
             $stmt->execute(array($answerid));
         } catch(Exception $e) {
             $errors->addError('answer', 'error processing update on answer table');

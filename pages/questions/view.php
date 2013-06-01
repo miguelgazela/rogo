@@ -8,6 +8,7 @@
     include_once($BASE_PATH . 'database/comments.php');
     include_once($BASE_PATH . 'database/tags.php');
     include_once($BASE_PATH . 'database/votes.php');
+    include_once($BASE_PATH . 'database/users.php');
 
     $id = $_GET['id'];
 
@@ -35,8 +36,10 @@
     // get answers, votes, comments and dates to array
     $answers = getAnswersOfQuestion($id);
     $votes = array();
+    $editors = array();
     $comments = array();
 
+    // get comments of question
     $questionComments = getCommentsOfPost($id);
     foreach($questionComments as &$comment) {
         $comment['creationdate_p'] = getPrettyDate($comment['creationdate']);
@@ -45,10 +48,17 @@
 
     // add comments to this question and check if user has voted on it
     $comments[] = $questionComments;
-    if(($vote = getVoteOfPost($id))) {
+    if(($vote = getVoteOfPost($id)))
         $votes[] = array("voted" => true, "votetype" => $vote['votetype']);
-    } else {
+    else
         $votes[] = array("voted" => false);
+
+    // check if question has been edited
+    if($question['creationdate'] != $question['lasteditdate']) {
+        $editor = getUserById($question['lasteditorid']);
+        $editors[] = $editor;
+    } else {
+        $editors[] = null;
     }
 
     foreach($answers as &$answer) {
@@ -66,6 +76,13 @@
         } else {
             $votes[] = array("voted" => false);
         }
+
+        if($answer['creationdate'] != $answer['lasteditdate']) {
+            $editor = getUserById($answer['lasteditorid']);
+            $editors[] = $editor;
+        } else {
+            $editors[] = null;
+        }
     }
 
     // get a possible draft for this question and user
@@ -81,6 +98,7 @@
     $smarty->assign("num_answers", count($answers));
     $smarty->assign("comments", $comments);
     $smarty->assign("votes", $votes);
+    $smarty->assign("editors", $editors);
 
     $smarty->display("questions/view.tpl");
 ?>

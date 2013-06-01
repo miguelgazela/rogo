@@ -201,8 +201,8 @@
         }
 
         try {
-            $stmt = $db->prepare("UPDATE post SET title = ?, body = ? WHERE postid = ?");
-            $stmt->execute(array($title, $details, $id));
+            $stmt = $db->prepare("UPDATE post SET title = ?, body = ?, lasteditorid = ?, lastactivitydate = now(), lasteditdate = now() WHERE postid = ?");
+            $stmt->execute(array($title, $details, $_SESSION['s_user_id'], $id));
         } catch(Exception $e) {
             $errors->addError('question', 'error processing update on question table');
             $errors->addError('exception', $e->getMessage());
