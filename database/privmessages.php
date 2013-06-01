@@ -1,9 +1,9 @@
-<?
+<?php
 	include_once($BASE_PATH . 'common/DatabaseException.php');
 
-	function listPrivateMessages($userid){
+	function getPrivateMessages($userid){
 		global $db;
-        $stmt = $db->prepare("SELECT usermessage.*, rogouser.userid, rogouser.username FROM usermessage, rogouser WHERE receiverid = ? AND userid = senderid ORDER BY creationdate DESC");
+        $stmt = $db->prepare("SELECT usermessage.*, rogouser.username, rogouser.email FROM usermessage, rogouser WHERE receiverid = ? AND userid = senderid ORDER BY creationdate DESC");
 		$stmt->execute(array($userid));
         return $stmt->fetchAll();
 	}

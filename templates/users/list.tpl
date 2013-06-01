@@ -42,6 +42,9 @@
                                 </div>
                             </div>
                         {/foreach}
+                        {if $total_number_users != $number_users}
+                            <a href="{$BASE_URL}pages/users/list.php?sort={$sort_method}&page={$page+1}" class="load-questions">Load more users...</a>
+                        {/if}
                     </section>
                 </div>
 
@@ -49,7 +52,7 @@
                     <div class="sidebar-content affix">
                         <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                         <div class="questions-count">
-                            <h3 class="questions-counter">{$number_users}</h3>
+                            <h3 class="questions-counter">{$total_number_users}</h3>
                             <p>users</p>
                         </div>
                     </div>

@@ -49,6 +49,11 @@ $(document).ready(function() {
     addAcceptAnswerHandlers();
 });
 
+$("#signup_form").submit(function(event) {
+    //event.preventDefault();
+    return (validateUsername() && validateEmail() && validatePassword() && confirmPassword());
+});
+
 function addAcceptAnswerHandlers() {
     $(".accept-answer").click(function(event){
 

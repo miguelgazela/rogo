@@ -9,8 +9,13 @@
     if(!isset($_GET['sort']) || !validSorting($_GET['sort'])) {
         $_GET['sort'] = "newest";
     }
+    if(!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+        $_GET['page'] = "1";
+    }
 
-    $questions = getQuestionsWithSorting($_GET['sort'], null, null);
+    $pageNumber = intval($_GET['page']);
+    $questions = getQuestionsWithSorting($_GET['sort'], 5*$pageNumber, 0);
+    $counter = getNumberOfQuestionsWithSorting($_GET['sort']);
     $tags = array();
 
     foreach($questions as &$question) {
@@ -30,8 +35,10 @@
     // send data to smarty
     $smarty->assign('sorted_questions', $questions);
     $smarty->assign('sort_method', $_GET['sort']);
-    $smarty->assign('number_questions', count($questions));
+    $smarty->assign('total_number_questions', $counter['total']);
+    $smarty->assign('number_presented_questions', count($questions));
     $smarty->assign('tags', $tags);
+    $smarty->assign("page", $pageNumber);
 
     // display smarty template
     $smarty->display('questions/list.tpl');

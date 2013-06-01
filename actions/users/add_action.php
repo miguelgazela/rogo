@@ -5,16 +5,6 @@
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/users.php');
 
-    function returnIfHasErrors($errors) {
-        global $BASE_URL;
-        if($errors->hasErrors()) {
-            $_SESSION['s_error'] = $errors->getErrors();
-            $_SESSION['s_values'] = $_POST;
-            header("Location: $BASE_URL"."pages/auth/signup.php");
-            exit;
-        }
-    }
-
     function validatePasswords($pass1, $pass2) {
         if(preg_match('/^[a-zA-Z0-9!@#$%^&*-_]{6,30}$/',$pass1) && ($pass1 == $pass2)) {
             return true;
@@ -40,13 +30,13 @@
             $errors->addError('password', 'no_confirmation_password');
         }
 
-        returnIfHasErrors($errors);
+        returnIfHasErrors($errors, "$BASE_URLpages/auth/signup.php");
 
         if(isset($_SESSION['s_last_account_created'])) {
             if((time() - $_SESSION['s_last_account_created']) < 30) { // at least 30 seconds between 2 new accounts request from same session
                 $newAccountAllowed = FALSE;
                 $errors->addError('account', 'wait_30_seconds');
-                returnIfHasErrors($errors);
+                returnIfHasErrors($errors, "$BASE_URLpages/auth/signup.php");
             }
         }
 
@@ -78,7 +68,7 @@
             $errors->addError('email', 'email_taken');
         }
 
-        returnIfHasErrors($errors);
+        returnIfHasErrors($errors, "$BASE_URLpages/auth/signup.php");
         
         // add the new user to the database
         try {
@@ -94,7 +84,7 @@
             header("Location: $BASE_URL"."index.php");
             exit;
         } catch (DatabaseException $e) {
-            returnIfHasErrors($e);
+            returnIfHasErrors($errors, "$BASE_URLpages/auth/signup.php");
         }
     }
 ?>

@@ -152,6 +152,12 @@ body {
           border-radius: 0;
 }
 
+.nav .dropdown-menu>li>a:hover,
+.nav .dropdown-menu>li>a:focus {
+  background-color: #306aa2;
+  background-image: none;
+}
+
 
 /* navigation bar current page */
 body._questions .nav > li._questions,
@@ -350,6 +356,19 @@ a.username:hover {
   -webkit-border-radius: 0;
      -moz-border-radius: 0;
           border-radius: 0;
+}
+
+.load-questions {
+  margin-top: 10px;
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  color: #306aa2;
+}
+
+.load-questions:hover {
+  color: #103d69;
+  text-decoration: none;
 }
 
 /***********************************************************************

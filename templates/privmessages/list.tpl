@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	{include file="../header.tpl" title="Rogo - Private Messages"}
+	{include file="../header.tpl" title="Rogo - {$s_username} Private Messages"}
 
     <body>     
 		{include file="../navbar.tpl"}
@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row">
                 <div class="span9">
-                    <h3 class="inbox-header">Inbox <span class="badge badge-info unread">2</span></h3>
+                    <h3 class="inbox-header">Inbox <span class="badge badge-info unread">{if $number_unread_messages != 0}{$number_unread_messages}{/if}</span></h3>
                     <div class="priv_messages">
 						{foreach $private_messages as $message}
 						{if $message.read == false}
@@ -18,14 +18,14 @@
 							<div class="priv_message">
 						{/if}
 						
-						<img class="media-object pull-left" src="../img/imageholder.png">
+						<img class="media-object pull-left" src="{$message.gravatar}">
 						<div class="priv_message_info_1 pull-left">
-							<a href="#" class="username">{$message.username}</a>
-							<span class="action-time">{$message.creationdate}</span>
+							From <a href="{$BASE_URL}pages/users/view.php?id={$message.senderid}" class="username">{$message.username}</a>
+							<span class="action-time" title="{$message.creatiodate}">{$message.creationdate_p}</span>
 						</div>
 						<div class="priv_message_info_2 pull-left">
-							<a href="{$BASE_URL}pages/privmessages/view.php?id={$message.usermsgid}" class="subject">{$message.subject}</a>
-							<span class="message-excerpt">A small excerpt of this message...</span>
+							Subject: <a href="{$BASE_URL}pages/privmessages/view.php?id={$message.usermsgid}" class="subject">{$message.subject}</a>
+							<span class="message-excerpt">{$message.body}</span>
 						</div>
 						<div class="priv_message_actions pull-left">
 							<div class="read">

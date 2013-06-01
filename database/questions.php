@@ -62,6 +62,33 @@
         return $postId;
     }
 
+    function getNumberOfQuestionsWithSorting($sort) {
+        global $db;
+        $query = "SELECT count(*) AS total FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
+
+        switch ($sort) {
+            case 'newest':
+                $query = $query." AND creationdate > ?";
+                break;
+            case 'unanswered':
+                $query = $query." AND answercount = 0";
+                break;
+            case 'votes':
+            case 'active':
+                break;
+            default:
+                throw new Exception("getQuestionsWithSorting: Invalid sorting");
+                break;
+        }
+        $stmt = $db->prepare($query);
+        if($sort == 'newest')
+            $stmt->execute(array($now));
+        else
+            $stmt->execute();
+        return $stmt->fetch();
+    }
+
     function getQuestionsWithSorting($sort, $limit, $offset) {
         global $db;
         $query = "SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = post.postid AND post.ownerid = rogouser.userid ";
@@ -72,7 +99,7 @@
                 $query = $query."AND creationdate > ? ORDER BY post.creationdate DESC";
                 break;
             case 'votes':
-                $query = $query."ORDER BY post.score DESC";
+                $query = $query."ORDER BY post.score DESC, answercount DESC";
                 break;
             case 'active':
                 $query = $query."ORDER BY post.lastactivitydate DESC";

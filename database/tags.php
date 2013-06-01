@@ -39,7 +39,7 @@
                 $query = $query."GROUP BY tag.tagid ORDER BY tagname";
                 break;
             case 'new':
-                $query = $query."AND creationdate > ? GROUP BY tag.tagid ORDER BY creationdate DESC";
+                $query = $query."AND creationdate > ? GROUP BY tag.tagid ORDER BY creationdate DESC, tagname";
                 break;
             default:
                 throw new Exception("getTagsWithSorting: Invalid sorting");

@@ -76,15 +76,20 @@
                                 </div>
                             </div>
                         {foreachelse}
-                            <p>No questions. This is extremely temporary</p>
+                            <p>No questions.</p>
                         {/foreach}
+
+                        {if $total_number_questions != $number_presented_questions}
+                            <a href="{$BASE_URL}pages/questions/list.php?sort={$sort_method}&page={$page+1}" class="load-questions">Load more questions...</a>
+                        {/if}
+
                     </section>
                 </div>
                 <div class="span3">
                     <div class="sidebar-content affix">
                         <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                         <div class="questions-count">
-                            <h3 class="questions-counter">{$number_questions}</h3>
+                            <h3 class="questions-counter">{$total_number_questions}</h3>
                             <p>questions</p>
                         </div>
                         <div class="popular-tags">

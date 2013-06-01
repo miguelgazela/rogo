@@ -99,12 +99,6 @@
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         {include file="../common-js.tpl"}
-        <script>
-            $("#signup_form").submit(function(event) {
-                event.preventDefault();
-                return (validateUsername() && validateEmail() && validatePassword() && confirmPassword());
-            })
-        </script>
     </body>
 </html>​
 

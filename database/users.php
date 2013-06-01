@@ -35,6 +35,32 @@
         return $followableid;
     }
 
+    function getNumberOfUsersWithSorting($sort) {
+        global $db;
+        $query = "SELECT count(*) AS total FROM rogouser ";
+        $now = date('Y-m-d', time()-1296000); // current date minus 15 days
+
+        switch ($sort) {
+            case 'reputation':
+            case 'active':
+            case 'voters':
+            case 'popular':
+                break;
+            case 'new':
+                $query = $query."WHERE registrationdate > ?";
+                break;
+            default:
+                throw new Exception("getUsersWithSorting: Invalid sorting");
+                break;
+        }
+        $stmt = $db->prepare($query);
+        if($sort == 'new')
+            $stmt->execute(array($now));
+        else
+            $stmt->execute();
+        return $stmt->fetch();
+    }
+
     function getUsersWithSorting($sort, $limit, $offset) {
         global $db;
         $query = "SELECT userid, username, email, registrationdate, reputation, lastaccess, upvotes, downvotes, viewcount FROM rogouser ";
@@ -42,19 +68,19 @@
 
         switch ($sort) {
             case 'reputation':
-                $query = $query."ORDER BY reputation DESC";
+                $query = $query."ORDER BY reputation DESC, registrationdate, username";
                 break;
             case 'new':
-                $query = $query."WHERE registrationdate > ? ORDER BY registrationdate DESC";
+                $query = $query."WHERE registrationdate > ? ORDER BY registrationdate DESC, username";
                 break;
             case 'active':
                 $query = $query."ORDER BY lastaccess DESC";
                 break;
             case 'voters':
-                $query = $query."ORDER BY upvotes DESC, downvotes DESC";
+                $query = $query."ORDER BY upvotes DESC, downvotes DESC, username";
                 break;
             case 'popular':
-                $query = $query."ORDER BY viewcount DESC";
+                $query = $query."ORDER BY viewcount DESC, username";
                 break;
             default:
                 throw new Exception("getUsersWithSorting: Invalid sorting");
