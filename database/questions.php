@@ -85,13 +85,13 @@
                 break;
         }
 
-        if($limit != null && $offset != null) {
-            $query = $query."LIMIT ? OFFSET ?";
+        if($limit !== null && $offset !== null) {
+            $query = $query." LIMIT ? OFFSET ?";
         }
 
         $stmt = $db->prepare($query);
 
-        if($limit != null && $offset != null) {
+        if($limit !== null && $offset !== null) {
             if($sort == 'newest')
                 $stmt->execute(array($now, $limit, $offset));
             else

@@ -60,7 +60,7 @@
         return $stmt->fetch();
     }
 
-    function updateAnswerDraft($answerid, $text) {
+    function updateAnswer($answerid, $text) {
         global $db;
         $errors = new DatabaseException();
 

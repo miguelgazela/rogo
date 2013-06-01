@@ -48,7 +48,7 @@
                 if($answer['ownerid'] == $_SESSION['s_user_id']) { // and the users owns it
                     
                     if($answer['draft']) { // if it's a draft, the user can update it or set it as a definitive answer
-                        updateAnswerDraft($answer['answerid'], $text);
+                        updateAnswer($answer['answerid'], $text);
                         
                         if($draft === "true") {
                             $response['requestStatus'] = "OK";

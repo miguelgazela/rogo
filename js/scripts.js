@@ -38,9 +38,6 @@ $(document).ready(function() {
     // define the remove action for answers
     addRemoveAnswerHandlers();
 
-    // define the edit action for answers
-    addEditAnswerHandlers();
-
     // define the actions for vote buttons
     addVoteUpHandlers();
     addVoteDownHandlers();
@@ -159,6 +156,10 @@ function cancelQuestionEdit(questionId) {
     window.location.replace(BASE_URL+"pages/questions/view.php?id="+questionId);
 }
 
+function cancelAnswerEdit(questionId) {
+    window.location.replace(BASE_URL+"pages/questions/view.php?id="+questionId);
+}
+
 function findUsers(input) {
     var text = $(input).val();
     text = text.toLowerCase();
@@ -240,15 +241,6 @@ function addRemoveCommentHandlers() {
                 alert("Ups! An error occurred while trying to remove your comment. Please try again later."); // TODO improve warning quality
             }
         });
-    });
-}
-
-function addEditAnswerHandlers() {
-    $(".answer .edit").click(function(e){
-        var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
-
-        console.log(answerId);
-        $("#answer-"+answerId).find(".answer-body").attr("contenteditable", true);
     });
 }
 
@@ -399,6 +391,20 @@ function getPrettyDate(date) {
                 }
             }
         }
+    }
+}
+
+function validateAnswerText() {
+    var answerText = $("#inputAnswer").val();
+
+    if(answerText.length < 20) {
+        $(".inputAnswer > span.help-block").text("You need to write at least 20 characters");
+        $(".inputAnswer").addClass("error");
+        return false;
+    } else { /*valid */
+        $(".inputAnswer > span.help-block").text("");
+        $(".inputAnswer").removeClass("error");
+        return true;
     }
 }
 

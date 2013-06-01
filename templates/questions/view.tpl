@@ -137,7 +137,7 @@
                                             {if $answer.commentcount == 0}
                                                 <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
                                             {/if}
-                                            <span class="edit text-center"><i class="icon-edit icon-2x"></i></span>
+                                            <span class="edit text-center"><a href="{$BASE_URL}pages/answers/edit.php?id={$answer.postid}"><i class="icon-edit icon-2x"></i></a></span>
                                         {/if}
                                     </div>
                                 {/if}

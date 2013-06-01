@@ -87,6 +87,15 @@
                             <h3 class="questions-counter">{$number_questions}</h3>
                             <p>questions</p>
                         </div>
+                        <div class="popular-tags">
+                            <h4 class="popular-tags-header">Popular tags</h4>
+                            {foreach $popular_tags as $pop_tag}
+                                <div class="popular-tag">
+                                    <a href="{$BASE_URL}pages/tags/view.php?id={$pop_tag.tagid}" class="post-tag">{$pop_tag.tagname}</a>
+                                    <span class="tag-multiplier">&times {$pop_tag.used}</span>
+                                </div>
+                            {/foreach}
+                        </div>
                     </div>
                 </div>
             </div>

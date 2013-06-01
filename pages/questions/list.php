@@ -21,6 +21,12 @@
         $question['gravatar'] = "http://www.gravatar.com/avatar/".md5(strtolower(trim($question['email'])))."?s=50&r=pg&d=identicon";
     }
 
+    // get popular tags
+    $popular_tags = getTagsWithSorting("popular", 10, 0);
+    if($popular_tags) {
+        $smarty->assign("popular_tags", $popular_tags);
+    }
+
     // send data to smarty
     $smarty->assign('sorted_questions', $questions);
     $smarty->assign('sort_method', $_GET['sort']);
