@@ -48,24 +48,29 @@ $(document).ready(function() {
     // define the actions for the comment input area
     addCommentInputHandlers();
 
-    // define the accept answer action
+    // define the action for accept answer button
+    addAcceptAnswerHandlers();
+});
+
+function addAcceptAnswerHandlers() {
     $(".accept-answer").click(function(event){
 
         var button = this;
+        var intention;
 
         if($(this).hasClass("accepted")) {
-            var intention = "remove-accept"; // remove this answer as accepted
+            intention = "remove-accept"; // remove this answer as accepted
             $(this).removeClass("accepted");
             $(".accept-answer i").removeClass("hide");
         } else {
             // check if there is already an accepted answer
-            if($(".accept-answer.accepted").length != 0) {
+            if($(".accept-answer.accepted").length !== 0) {
                 alert("Ups! You've already marked an answer as accepted. Please remove it and add this one instead.");
                 return;
             } else {
                 $(this).addClass("accepted");
                 $(".accept-answer").not(this).children('i').addClass("hide");
-                var intention = "accept";
+                intention = "accept";
             }
         }
 
@@ -85,9 +90,9 @@ $(document).ready(function() {
                 }
                 alert("Ups! An error occurred while trying to update this answer. Please try again later."); // TODO improve warning quality
             }
-        });    
+        });
     });
-});
+}
 
 $("form.edit-question").submit(function(event) {
 
@@ -326,8 +331,8 @@ function getUrlOfVoteAction(element, classVote, currentScore, scores) {
 }
 
 function voteRequestResponseHandler(response, element, currentScore, url) {
-    console.log("URL: "+url);
-    console.log(response);
+    //console.log("URL: "+url);
+    //console.log(response);
     if(response.requestStatus == "NOK") {
         $(element).siblings(".vote-counter").text(currentScore);
 
@@ -409,14 +414,12 @@ function addAnswer(questionID, draft) {
         $(".inputAnswer > span.help-block").text("");
         $(".inputAnswer").removeClass("error");
 
-        console.log("Draft: "+draft);
-
         $.post(BASE_URL+'ajax/answers/add.php', {id: questionID, text: answerText, title: questionTitle, isdraft: draft}, function(response) {
-            console.log(response); // TODO remove
+            //console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 if(draft) { // inform the draft was saved
                     $(".inputAnswer > span.help-block").text("Draft saved!");
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $(".inputAnswer > span.help-block").text("");
                     }, 7000);
                 } else {
@@ -430,7 +433,7 @@ function addAnswer(questionID, draft) {
                     if(response.data.username == username) {
                         answer += "<span class='accept-answer text-center'><i class='icon-ok-circle icon-2x'></i></span>";
                     }
-                    
+                
                     answer += '<span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>';
                     answer += '<span class="edit text-center"><i class="icon-edit icon-2x"></i></span></div>';
                     answer += "<div class='answer-container'><p class='answer-body'>"+response.data.answerText+"</p>";
@@ -453,7 +456,7 @@ function addAnswer(questionID, draft) {
 
                     // update answer counter
                     var current = parseInt($("span.answers-counter").text());
-                    if(current == 1) {
+                    if(current == 0) {
                         $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answer");
                     } else {
                         $('.answers-header > h4').html("<span class='answers-counter'>"+(current+1)+"</span> Answers");

@@ -54,7 +54,10 @@
                             $response['requestStatus'] = "OK";
                             returnOkJSON($response, "Draft updated", array("answerId" => $answerid, "draft" => $draft));
                         } else {
+                            $db->beginTransaction();
                             setDraftAsAnswer($answer['answerid']);
+                            incNumAnswers($id);
+                            $db->commit();
                             $response['requestStatus'] = "OK";
                             returnOkJSON($response, "Draft is now a definitive answer", array("answerId" => $answerid, "answerText" => nl2br(htmlspecialchars(stripslashes($text))), "draft" => $draft, "username" => $_SESSION['s_username'], "userid" => $_SESSION['s_user_id'], "reputation" => $_SESSION['s_reputation']));
                         }

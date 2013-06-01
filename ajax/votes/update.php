@@ -34,25 +34,11 @@
             	if($vote['votetype'] == $voteType) {
             		returnErrorJSON($response, 7, "Vote is already of that type", array("vote" => $vote, "existed" => true, "action" => "failed"));
             	}
-
-            	$db->beginTransaction();
                 updateVote($vote['voteid'], $voteType);
-
-            	// needs to update score of post
-            	if($vote['voteType'] == 1) {
-                	updateAnswerScore($postid, 1);
-            		updateQuestionScore($postid, 1);
-            	} else {
-            		updateAnswerScore($postid, -1);
-            		updateQuestionScore($postid, -1);
-            	}
-                $db->commit();
-                
             	$response['requestStatus'] = "OK";
             	returnOkJSON($response, "Vote was updated", array("vote" => $vote, "existed" => true, "action" => "updated"));
             }
         } catch(DatabaseException $e) {
-        	$db->rollBack();
             returnErrorJSON($response, 8, "Error updating vote on database", $e->getErrors());
         }
     } else {

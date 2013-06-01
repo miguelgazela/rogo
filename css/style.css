@@ -799,7 +799,7 @@ div.question-info .question-container .question-footer .edited {
   margin-top: 20px;
   min-height: 150px;
   border-bottom: 1px solid #aaa;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .answer.not-logged-in {

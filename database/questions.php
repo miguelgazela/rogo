@@ -129,6 +129,24 @@
         return $stmt->fetch();
     }
 
+    function incNumAnswers($id) {
+        global $db;
+        $errors = new DatabaseException();
+
+        if(!is_numeric($id)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("UPDATE question SET answercount = (SELECT answercount FROM question WHERE questionid = ?) + 1 WHERE questionid = ?");
+            $stmt->execute(array($id, $id));
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing update on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
     function incQuestionViews($id) {
         global $db;
         $errors = new DatabaseException();
