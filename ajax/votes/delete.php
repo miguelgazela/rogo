@@ -4,6 +4,7 @@
     include_once($BASE_PATH . 'database/votes.php');
     include_once($BASE_PATH . 'database/answers.php');
     include_once($BASE_PATH . 'database/questions.php');
+    include_once($BASE_PATH . 'database/users.php');
 
     header('Content-Type: application/json');
     $response['requestStatus'] = "NOK";
@@ -31,12 +32,35 @@
             	if($vote['votetype'] == 1) {
             		updateAnswerScore($postid, -1);
             		updateQuestionScore($postid, -1);
+
+                    // get owner
+                    $answer = getAnswerById($postid);
+                    if($answer) {
+                        updateUserReputation($answer['ownerid'], -10);
+                    } else {
+                        $question = getQuestionById($postid);
+                        if($question) {
+                            updateUserReputation($question['ownerid'], -5);
+                        }
+                    }
+
             	} else {
             		updateAnswerScore($postid, 1);
             		updateQuestionScore($postid, 1);
-            	}
-            	$db->commit();
 
+                    // get owner
+                    $answer = getAnswerById($postid);
+                    if($answer) {
+                        updateUserReputation($answer['ownerid'], +2);
+                    } else {
+                        $question = getQuestionById($postid);
+                        if($question) {
+                            updateUserReputation($question['ownerid'], +2);
+                        }
+                    }
+            	}
+
+            	$db->commit();
             	$response['requestStatus'] = "OK";
             	returnOkJSON($response, "Vote was removed from the database", array("vote" => $vote, "existed" => true, "action" => "deleted"));
             }

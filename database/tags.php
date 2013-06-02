@@ -105,6 +105,18 @@
         }
     }
 
+    function getQuestionsWithTag($tagid) {
+        global $db;
+        try {
+            $stmt = $db->prepare("SELECT questionid FROM questiontag WHERE tagid = ?");
+            $stmt->execute(array($tagid));
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            $errors->addError('questiontag', 'error processing insert into questiontag table');
+            throw($errors);
+        }
+    }
+
     function getTagByName($tagname) {
         global $db;
         $result = $db->prepare("SELECT * FROM tag WHERE tagname = ?");

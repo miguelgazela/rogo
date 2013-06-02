@@ -92,6 +92,8 @@
     }
 
     // send data to smarty and display template
+    $smarty->assign("permission", $_SESSION['s_user_permission']);
+    $smarty->assign("reputation", $_SESSION['s_user_reputation']);
     $smarty->assign('question', $question);
     $smarty->assign('tags',getTagsOfQuestion($id));
     $smarty->assign('answers', $answers);

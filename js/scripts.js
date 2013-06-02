@@ -166,7 +166,7 @@ function cancelAnswerEdit(questionId) {
 }
 
 function findUsers(input) {
-    var text = $(input).val();
+    var text = $(input).val().trim();
     text = text.toLowerCase();
 
     $('.username').each(function(){
@@ -183,7 +183,7 @@ function findUsers(input) {
 }
 
 function findTags(input) {
-    var text = $(input).val();
+    var text = $(input).val().trim();
     text = text.toLowerCase();
 
     $('.post-tag').each(function(){
@@ -194,6 +194,74 @@ function findTags(input) {
                 $(this).parents(".tag").hide();
             } else {
                 $(this).parents(".tag").show();
+            }
+        }
+    });
+}
+
+function findAnswers(input) {
+    var text = $(input).val().trim();
+    text = text.toLowerCase();
+
+    $('.data .answer-body').each(function(){
+        if(text === "") {
+            $(this).parents(".answer").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".answer").hide();
+            } else {
+                $(this).parents(".answer").show();
+            }
+        }
+    });
+}
+
+function findDrafts(input) {
+    var text = $(input).val().trim();
+    text = text.toLowerCase();
+
+    $('.data .answer-body').each(function(){
+        if(text === "") {
+            $(this).parents(".answer").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".answer").hide();
+            } else {
+                $(this).parents(".answer").show();
+            }
+        }
+    });
+}
+
+function findQuestions(input) {
+    var text = $(input).val().trim();
+    text = text.toLowerCase();
+
+    $('.data .question-title').each(function(){
+        if(text === "") {
+            $(this).parents(".question-summary").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".question-summary").hide();
+            } else {
+                $(this).parents(".question-summary").show();
+            }
+        }
+    });
+}
+
+function findTaggedQuestions(input) {
+    var text = $(input).val().trim();
+    text = text.toLowerCase();
+
+    $('.question-title').each(function(){
+        if(text === "") {
+            $(this).parents(".question-summary").show();
+        } else {
+            if($(this).text().toLowerCase().indexOf(text) == -1) {
+                $(this).parents(".question-summary").hide();
+            } else {
+                $(this).parents(".question-summary").show();
             }
         }
     });
@@ -259,7 +327,7 @@ function addRemoveAnswerHandlers() {
     $(".answer .remove").click(function(e){
         var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
         $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
-            //console.log(response); // TODO remove
+            console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 $("#answer-"+answerId).remove();
 
@@ -271,7 +339,13 @@ function addRemoveAnswerHandlers() {
                     $('.answers-header > h4').html("<span class='answers-counter'>"+(current-1)+"</span> Answers");
                 }
             } else {
-                alert("Ups! An error occurred while trying to remove your answer. Please try again later."); // TODO improve warning quality
+                if(response.errorCode == 6) {
+                    alert("Ups! You can't delete an answer that has been accepted.");
+                } else if (response.errorCode == 7) {
+                    alert("Ups! You can't delete an answer that has votes.");
+                } else {
+                    alert("Ups! An error occurred while trying to remove the answer. Please try again later."); // TODO improve warning quality
+                }
             }
         });
     });
@@ -354,8 +428,8 @@ function getUrlOfVoteAction(element, classVote, currentScore, scores) {
 }
 
 function voteRequestResponseHandler(response, element, currentScore, url) {
-    //console.log("URL: "+url);
-    //console.log(response);
+    console.log("URL: "+url);
+    console.log(response);
     if(response.requestStatus == "NOK") {
         $(element).siblings(".vote-counter").text(currentScore);
 

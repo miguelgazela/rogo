@@ -19,16 +19,15 @@
         exit();
     }
 
-    $answer['body'] = htmlspecialchars(stripslashes($answer['body']));
-
     // check if the user is the owner of the answer
-    if($answer['ownerid'] != $_SESSION['s_user_id']) {
+    if($answer['ownerid'] != $_SESSION['s_user_id'] && $_SESSION['s_user_permission'] == 1 && $_SESSION['s_user_reputation'] < 1000) {
     	$smarty->assign('warning_msg', "That's not your answer! Why are you trying to change it?");
         $smarty->display("showWarning.tpl");
-        exit();
+        exit;
     }
 
     // send data to smarty and display template
+    $answer['body'] = htmlspecialchars(stripslashes($answer['body']));
     $smarty->assign('answer', $answer);
     $_SESSION['edit_answerid'] = $id;
     $smarty->display("answers/edit.tpl");

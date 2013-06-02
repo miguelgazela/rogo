@@ -11,7 +11,7 @@
 		
 		foreach($privatemessages as &$privatemessage) {
 			$privatemessage['creationdate_p'] = getPrettyDate($privatemessage['creationdate']);
-			$privatemessage['body'] = getSmallerText($privatemessage['body'], 50);
+			$privatemessage['body'] = getSmallerText($privatemessage['body'], 60);
 			$privatemessage['subject'] = getSmallerText($privatemessage['subject'], 40);
 			if(!$privatemessage['read']) {
 				$unread++;

@@ -35,6 +35,8 @@
         $pm['creationdate_p'] = getPrettyDate($pm['creationdate']);
         $pm['gravatar'] = "http://www.gravatar.com/avatar/".md5(strtolower(trim($pm['email'])))."?s=50&r=pg&d=identicon";
 
+        $_SESSION['s_values']['subject'] = "FWD: ".htmlspecialchars(stripslashes($pm['subject']));
+        
         // send data to smarty and display template
         $smarty->assign('pm', $pm);
         $smarty->display("privmessages/view.tpl");

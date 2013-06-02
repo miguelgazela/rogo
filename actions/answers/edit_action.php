@@ -33,12 +33,18 @@
     		returnIfHasErrors($errors, $_SERVER['HTTP_REFERER']);
     	}
 
+        // check if answer is from this user or user is moderator
+        if($answer['ownerid'] != $_SESSION['s_user_id'] && $_SESSION['s_user_permission'] == 1 && $_SESSION['s_user_reputation'] < 1000) {
+            $errors->addError("answer", "you don't have permission to change this answer");
+            returnIfHasErrors($errors, "pages/answers/edit.php?id=$answerid");
+        }
+
     	updateAnswer($answerid, $answerText);
 
     	// redirects to question page
 	    header("Location: $BASE_URL"."pages/questions/view.php?id=".$answer['questionid']);
 	    exit();  
     } catch(DatabaseException $e) {
-    	returnIfHasErrors($errors, $_SERVER['HTTP_REFERER']);
+    	returnIfHasErrors($errors, "pages/answers/edit.php?id=$answerid");
     }  
 ?>

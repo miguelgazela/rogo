@@ -1175,6 +1175,72 @@ input.find-user {
   padding: 0;
 }
 
+.profile-header {
+  border-bottom: 1px solid #eaeaea;
+  margin: 0;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+}
+
+.big-avatar-frame {
+  border: 1px solid #306aa2;
+  margin-right: 30px;
+}
+
+.profile-user-info {
+  margin-bottom: 30px;
+}
+
+.profile-user-info table th,
+.profile-user-info table td {
+  text-align: left;
+}
+
+.profile-user-info table th {
+  font-size: 13px;
+  color: #333;
+}
+
+.profile-user-info table td {
+  padding-left: 30px;
+}
+
+.big-avatar-frame, .big-avatar-frame img{
+  width: 90px;
+  height: 90px;
+  -webkit-border-radius: 0px; /* Saf3+, Chrome - 30px for circle*/
+  border-radius: 0px; /* Opera 10.5, IE 9 - 30px for circle */
+  -moz-border-radius: 30px; /*Disabled for FF1+ */
+}
+
+.data {
+  margin-top: 20px;
+}
+
+.data div.tags,
+.data div.started {
+  margin-left: 0;
+}
+
+.data .answer {
+  padding-bottom: 0;
+  min-height: 40px;
+}
+
+.data .answer-body a {
+  color: #306AA2;
+}
+
+.data .answer-body a:hover {
+  color: #103d69;
+}
+
+.sidebar-content .user-actions {
+  border-top: 1px solid #eaeaea;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
 /***********************************************************************
  *
  *                      TAGS SECTION
@@ -1195,7 +1261,26 @@ input.find-user {
  .tag span, .tag p {
   font-size: 12px;
   color: #a6a6a6;
- }
+}
+
+.tagged #questions {
+  margin-top: 20px;
+}
+
+.tagged .tags-header {
+  margin-left: 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.tagged .find-user {
+  margin-top: 10px;
+}
+
+.tagged .data {
+  margin-top: 10px;
+}
+
 
  /***********************************************************************
  *

@@ -298,6 +298,31 @@
         }
     }
 
+    function getQuestionsOfUser($userid, $limit) {
+        global $db;
+        if(!is_numeric($userid) || !is_numeric($limit)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND ownerid = ? ORDER BY lastactivitydate LIMIT ?");
+            $stmt->execute(array($userid, $limit));
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing select on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function getNumberOfQuestionsOfUser($userid) {
+        global $db;
+
+        $stmt = $db->prepare("SELECT count(*) AS total FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND ownerid = ?");
+        $stmt->execute(array($userid));
+        return $stmt->fetch();
+    }
+
     /* HELPER FUNCTIONS */
 
     function validateQuestionTitle($title) {

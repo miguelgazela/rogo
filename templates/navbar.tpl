@@ -18,13 +18,14 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{$BASE_URL}pages/questions/add.php">Add Question</a></li>
+                                <li><a href="{$BASE_URL}pages/questions/add.php"><i class="icon-comment"></i> Ask Question</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{$BASE_URL}pages/privmessages/list.php">Messages</a></li>
-                                <li><a href="#">Drafts</a></li>
-                                <li><a href="#">Notifications</a></li>
+                                <li><a href="{$BASE_URL}pages/users/view.php?id={$s_user_id}"><i class="icon-user"></i> Profile</a></li>
+                                <li><a href="{$BASE_URL}pages/privmessages/list.php"><i class="icon-envelope-alt"></i> Messages</a></li>
+                                <li><a href="{$BASE_URL}pages/users/view.php?id={$s_user_id}&sort=drafts"><i class="icon-pencil"></i> Drafts</a></li>
+                                <li><a href="#"><i class="icon-flag"></i> Notifications</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{$BASE_URL}actions/auth/logout.php">Logout</a></li>
+                                <li><a href="{$BASE_URL}actions/auth/logout.php"><i class="icon-signout"></i> Logout</a></li>
                             </ul>
                         </li>
                     {/if}

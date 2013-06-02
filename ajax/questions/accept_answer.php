@@ -4,6 +4,7 @@
     include_once($BASE_PATH . 'common/DatabaseException.php');
     include_once($BASE_PATH . 'database/answers.php');
     include_once($BASE_PATH . 'database/questions.php');
+    include_once($BASE_PATH . 'database/users.php');
 
     header('Content-Type: application/json');
     $response['requestStatus'] = "NOK";
@@ -61,6 +62,7 @@
     				$db->beginTransaction();
         			acceptedAsValidAnswer($answerid, $intention);
         			acceptValidAnswer($questionid, $answerid);
+                    updateUserReputation($answer['ownerid'], 15);
         			$db->commit();
             		$response['requestStatus'] = "OK";
             		returnOkJSON($response, "Answer was accepted.", array("answerId" => $answerid, "questionid" => $questionid, "intention" => $intention));
@@ -72,6 +74,7 @@
     				$db->beginTransaction();
     				acceptedAsValidAnswer($answerid, $intention);
     				removeAcceptedAnswer($questionid, $answerid);
+                    updateUserReputation($answer['ownerid'], -15);
     				$db->commit();
     				$response['requestStatus'] = "OK";
     				returnOkJSON($response, "Answer was removed as accepted.", array("answerId" => $answerid, "questionid" => $questionid, "intention" => $intention));

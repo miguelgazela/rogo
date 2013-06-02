@@ -13,14 +13,13 @@
             throw ($errors);
         }
 
-        $db->beginTransaction();
+        
         // insert a new notifiable and get its id
         try {
             $stmt = $db->prepare("INSERT INTO notifiable (type) VALUES (2)");
             $stmt->execute();
             $voteId = $db->lastInsertId('notifiable_notifiableid_seq');
         } catch (Exception $e) {
-            $db->rollBack();
             $errors->addError('notifiable', 'error processing insert into notifiable table');
             $errors->addError('exception', $e->getMessage());
             throw ($errors);
@@ -31,13 +30,22 @@
             $stmt = $db->prepare("INSERT INTO vote (voteid, creationdate, votetype, userid, votedid) VALUES (?, now(), ?, ?, ?)");
             $stmt->execute(array($voteId, $voteType, $_SESSION["s_user_id"], $postid));
         } catch(Exception $e) {
-            $db->rollBack();
             $errors->addError('vote', 'error processing insert into vote table');
             $errors->addError('exception', $e->getMessage());
             throw ($errors);
         }
-        $db->commit();
         return $voteId;
+    }
+
+    function getNumberOfVotes($id) {
+        global $db;
+        if(!is_numeric($id)) {
+            throw new Exception("invalid_id");
+        }
+
+        $stmt = $db->prepare("SELECT count(*) as total FROM vote WHERE votedid = ?");
+        $stmt->execute(array($id));
+        return $stmt->fetch();
     }
 
     function updateVote($voteid, $voteType) {

@@ -23,11 +23,11 @@
                         {foreach $sorted_users as $user}
                             <div class="user">
                                 <div class="media">
-                                    <a class="pull-left avatar-frame" href="#">
+                                    <a class="pull-left avatar-frame" href="{$BASE_URL}pages/users/view.php?id={$user.userid}">
                                         <img class="media-object" src="{$user.gravatar}" />
                                     </a>
                                     <div class="media-body">
-                                        <h6 class="media-heading username"><a href="{$BASE_URL}pages/users(view.php?id={$user.userid}">{$user.username}</a></h6>
+                                        <h6 class="media-heading username"><a href="{$BASE_URL}pages/users/view.php?id={$user.userid}">{$user.username}</a></h6>
                                         <p class="reputation"><i class="icon-trophy"></i> {$user.reputation}</p>
                                         {if $sort_method == "active"}
                                             <p class="member" title="{$user.lastaccess}">Last access: {$user.lastaccess_p}</p>

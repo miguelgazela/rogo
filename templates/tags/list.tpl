@@ -20,7 +20,7 @@
                     <section id="tags">
                         {foreach $sorted_tags as $tag}
                             <div class="tag">
-                                <a href="#" class="post-tag">{$tag.tagname}</a>
+                                <a href="{$BASE_URL}pages/tags/view.php?tags={$tag.tagname}" class="post-tag">{$tag.tagname}</a>
                                 <span class="tag-multiplier">&times {$tag.used}</span>
                                 <p class="created" title="{$tag.creationdate}">{$tag.creationdate_p}</p>
                             </div>

@@ -28,10 +28,12 @@
                                     {else}
                                         <span class="vote-down"></span>
                                     {/if}
-                                    {if $question.ownerid == $s_user_id}
-                                        {if $question.answercount == 0}
-                                            <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
+                                    {if $question.ownerid == $s_user_id || $permission > 1 || $reputation >= 1000}
+                                        <!--
+                                        {if $question.answercount == 0 && $question.ownerid == $s_user_id}
+                                            <span class="remove text-center" onclick="removeThisQuestion(this);"><i class="icon-remove-sign icon-2x"></i></span>
                                         {/if}
+                                        -->
                                         <span class="edit text-center"><a href="{$BASE_URL}pages/questions/edit.php?id={$question.postid}"><i class="icon-edit icon-2x"></i></a></span>
                                     {/if}
                                 </div>
@@ -41,7 +43,7 @@
                             <p class="question-body">{$question.body}</p>
                             <div class="tags">
                                 {foreach $tags as $tag}
-                                <a href="#" class="post-tag">{$tag.tagname}</a>
+                                <a href="{$BASE_URL}pages/tags/view.php?tags={$tag.tagname}" class="post-tag">{$tag.tagname}</a>
                                 {/foreach}
                             </div>
                             <div class="question-footer">
@@ -72,7 +74,7 @@
                                     <div class="comment" id="comment-{$comment.commentid}">
                                     {/if}
                                         {$comment.body} - <a href="{$BASE_URL}pages/users/view.php?id={$comment.ownerid}" class="username">{$comment.username} </a><span class="action-time" title="{$comment.creationdate}"> {$comment.creationdate_p}</span>
-                                        {if $comment.username == $s_username}
+                                        {if $comment.username == $s_username || $permission > 1}
                                              <i class="icon-remove-sign"></i>
                                         {/if}
                                     </div>
@@ -133,8 +135,8 @@
                                             {/if}
                                         {/if}
 
-                                        {if $answer.ownerid == $s_user_id}
-                                            {if $answer.commentcount == 0}
+                                        {if $answer.ownerid == $s_user_id || $permission > 1 || $reputation >= 1000}
+                                            {if $answer.commentcount == 0 && $question.acceptedanswerid != $answer.postid}
                                                 <span class="remove text-center"><i class="icon-remove-sign icon-2x"></i></span>
                                             {/if}
                                             <span class="edit text-center"><a href="{$BASE_URL}pages/answers/edit.php?id={$answer.postid}"><i class="icon-edit icon-2x"></i></a></span>
@@ -200,10 +202,12 @@
                             </div>
                             <span class="help-block"></span>
                         </div>
+                        <!--
                         <label class="checkbox">
                             <input type="checkbox" value="" name="anonymously">
                             Add Anonymously
                         </label>
+                        -->
                         <button type="button" class="btn" onclick="addAnswer({$question.questionid}, false);">Post answer</button>
                         <button type="button" class="btn" onclick="addAnswer({$question.questionid}, true)">Save draft</button>
                     </form>

@@ -107,6 +107,18 @@
         return $stmt->fetchAll();
     }
 
+    function incProfileViews($userid) {
+        global $db;
+        try {
+            $stmt = $db->prepare("UPDATE rogouser SET viewcount = (SELECT viewcount FROM rogouser WHERE userid = ?) + 1 WHERE userid = ?");
+            $stmt->execute(array($userid, $userid));
+        } catch (Exception $e) {
+            $errors->addError('rogouser', 'error processing update of rogouser viewcount');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
     function getUserInfoByLogin($login, $pass_hash) {
         global $db;
         $response = array();
@@ -129,6 +141,19 @@
 
         $stmt = $db->prepare("UPDATE rogouser SET lastaccess = now() WHERE username = ?");
         $stmt->execute(array($username));
+    }
+
+    function updateUserReputation($userid, $score) {
+        global $db;
+
+        try {
+            $stmt = $db->prepare("UPDATE rogouser SET reputation = (SELECT reputation FROM rogouser WHERE userid = ?) + ? WHERE userid = ?");
+            $stmt->execute(array($userid, $score, $userid));
+        } catch (Exception $e) {
+            $errors->addError('rogouser', 'error processing update of rogouser reputation');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
     }
 
     function getUserByUsername($username) {

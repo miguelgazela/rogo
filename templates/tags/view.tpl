@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
    
-    {include file="../header.tpl" title="Rogo - {$sort_method} Questions"}
+    {include file="../header.tpl"}
 
-    <body class="_questions">
+    <body>
         {include file="../navbar.tpl"}
         
         <div class="container">
             <div class="row">
-                <div class="span9">
-                    <ul class="nav nav-tabs">
-                        <li{if $sort_method == "newest"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=newest">newest</a></li>
-                        <li{if $sort_method == "votes"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=votes">votes</a></li>
-                        <li{if $sort_method == "active"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=active">active</a></li>
-                        <li{if $sort_method == "unanswered"} class='active'{/if}><a href="{$BASE_URL}pages/questions/list.php?sort=unanswered">unanswered</a></li>
-                    </ul>
+                
+                <div class="span9 tagged">
+                    <div class="tags-header">
+                        {foreach $tags as $tag}
+                        <a href="#" class="post-tag">{$tag.tagname}</a>
+                        {foreachelse}
+                        <p>No valid tags...</p>
+                        {/foreach}
+                    </div>
+
+                    <input type="text" class="find-user" onkeyup="findTaggedQuestions(this);" placeholder="type to find questions" />
 
                     <section id="questions">
-                        {foreach $sorted_questions as $question}
+                        {foreach $questions as $question}
                             <div class="question-summary">
                                 <div class="summary">
                                     <div class="media">
@@ -25,7 +29,7 @@
                                             <img class="media-object" src="{$question.gravatar}" />
                                         </a>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><a href="{$BASE_URL}pages/questions/view.php?id={$question.questionid}">{$question.title}</a></h5>
+                                            <h5 class="media-heading"><a href="{$BASE_URL}pages/questions/view.php?id={$question.questionid}" class="question-title">{$question.title}</a></h5>
                                             <p class="excerpt">{$question.body}</p>
                                         </div>
                                     </div>
@@ -62,8 +66,8 @@
                                 </div>
                                 
                                 <div class="tags">
-                                    {foreach $tags[$question@index] as $tag}
-                                    <a href="{$BASE_URL}pages/tags/view.php?tags={$tag.tagname}" class="post-tag">{$tag.tagname}</a>
+                                    {foreach $questiontags[$question@index] as $tag}
+                                    <a href="#" class="post-tag">{$tag.tagname}</a>
                                     {/foreach}
                                 </div>
 
@@ -76,13 +80,12 @@
                                 </div>
                             </div>
                         {foreachelse}
-                            <p>No questions.</p>
+                            <p>No questions with chosen tags...</p>
                         {/foreach}
 
                         {if $total_number_questions != $number_presented_questions}
-                            <a href="{$BASE_URL}pages/questions/list.php?sort={$sort_method}&page={$page+1}" class="load-questions">Load more questions...</a>
+                            <a href="{$BASE_URL}pages/tags/view.php?page={$page+1}&tags={foreach $tags as $tag}{$tag.tagname},{/foreach}" class="load-questions">Load more questions...</a>
                         {/if}
-
                     </section>
                 </div>
                 <div class="span3">
@@ -90,23 +93,14 @@
                         <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                         <div class="questions-count">
                             <h3 class="questions-counter">{$total_number_questions}</h3>
-                            <p>questions</p>
-                        </div>
-                        <div class="popular-tags">
-                            <h4 class="popular-tags-header">Popular tags</h4>
-                            {foreach $popular_tags as $pop_tag}
-                                <div class="popular-tag">
-                                    <a href="{$BASE_URL}pages/tags/view.php?tags={$pop_tag.tagname}" class="post-tag">{$pop_tag.tagname}</a>
-                                    <span class="tag-multiplier">&times {$pop_tag.used}</span>
-                                </div>
-                            {/foreach}
+                            <p>{if $total_number_questions == 1}question{else}questions{/if}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {include file="../footer.tpl"}
+        <!--{include file="../footer.tpl"} -->
     
     <!-- Le javascript
         ================================================== -->

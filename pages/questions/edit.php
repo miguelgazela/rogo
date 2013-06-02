@@ -24,7 +24,7 @@
     $question['body'] = htmlspecialchars(stripslashes($question['body']));
 
     // check if the user is the owner of the question
-    if($question['ownerid'] != $_SESSION['s_user_id']) {
+    if($question['ownerid'] != $_SESSION['s_user_id'] && $_SESSION['s_user_permission'] == 1 && $_SESSION['s_user_reputation'] < 1000) {
     	$smarty->assign('warning_msg', "That's not your question! Why are you trying to change it?");
         $smarty->display("showWarning.tpl");
         exit();

@@ -51,8 +51,13 @@
 
         // delete comment
         try {
-            $stmt = $db->prepare("DELETE FROM comment WHERE commentid = ?");
-            $stmt->execute(array($commentid));
+            if($_SESSION['s_user_permission'] > 1) {
+                $stmt = $db->prepare("DELETE FROM comment WHERE commentid = ?");
+                $stmt->execute(array($commentid));
+            } else {
+                $stmt = $db->prepare("DELETE FROM comment WHERE commentid = ? AND ownerid = ?");
+                $stmt->execute(array($commentid, $_SESSION['s_user_id']));
+            }
         } catch(Exception $e) {
             $db->rollBack();
             $errors->addError('vote', 'error processing delete from vote table');

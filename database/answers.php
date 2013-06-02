@@ -60,6 +60,56 @@
         return $stmt->fetch();
     }
 
+    function getAnswersOfUser($userid, $limit) {
+        global $db;
+        if(!is_numeric($userid) || !is_numeric($limit)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("SELECT * FROM post, answer WHERE postid = answerid AND ownerid = ? AND draft = false LIMIT ?");
+            $stmt->execute(array($userid, $limit));
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing select on answer table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function getDraftsOfUser($userid, $limit) {
+        global $db;
+        if(!is_numeric($userid) || !is_numeric($limit)) {
+            throw new Exception("invalid_id");
+        }
+
+        try {
+            $stmt = $db->prepare("SELECT * FROM post, answer WHERE postid = answerid AND ownerid = ? AND draft = true LIMIT ?");
+            $stmt->execute(array($userid, $limit));
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            $errors->addError('answer', 'error processing select on answer table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
+    function getNumberOfDraftsOfUser($userid) {
+        global $db;
+
+        $stmt = $db->prepare("SELECT count(*) AS total FROM post, answer WHERE postid = answerid AND ownerid = ? AND draft = true");
+        $stmt->execute(array($userid));
+        return $stmt->fetch();
+    }
+
+    function getNumberOfAnswersOfUser($userid) {
+        global $db;
+
+        $stmt = $db->prepare("SELECT count(*) AS total FROM post, answer WHERE postid = answerid AND ownerid = ? AND draft = false");
+        $stmt->execute(array($userid));
+        return $stmt->fetch();
+    }
+
     function updateAnswer($answerid, $text) {
         global $db;
         $errors = new DatabaseException();
@@ -69,8 +119,8 @@
         }
 
         try {
-            $stmt = $db->prepare("UPDATE post SET body = ?, lastactivitydate = now(), lasteditdate = now(), lasteditorid = ? WHERE postid = ? AND post.ownerid = ?");
-            $stmt->execute(array($text, $_SESSION['s_user_id'], $answerid, $_SESSION['s_user_id']));
+            $stmt = $db->prepare("UPDATE post SET body = ?, lastactivitydate = now(), lasteditdate = now(), lasteditorid = ? WHERE postid = ?");
+            $stmt->execute(array($text, $_SESSION['s_user_id'], $answerid));
         } catch(Exception $e) {
             $errors->addError('answer', 'error processing update on answer table');
             $errors->addError('exception', $e->getMessage());
@@ -98,7 +148,9 @@
         }
 
         try {
-            $stmt = $db->prepare("UPDATE answer SET draft = false, lasteditdate = creationdate WHERE answerid = ?");
+            $stmt = $db->prepare("UPDATE answer SET draft = false WHERE answerid = ?");
+            $stmt->execute(array($answerid));
+            $stmt = $db->prepare("UPDATE post SET lasteditdate = creationdate WHERE postid = ?");
             $stmt->execute(array($answerid));
         } catch(Exception $e) {
             $errors->addError('answer', 'error processing update on answer table');
@@ -144,15 +196,19 @@
 
         // delete post
         try {
-            $stmt = $db->prepare("DELETE FROM post WHERE postid = ? AND ownerid = ? AND commentcount = 0"); // TODO doesn't check if user has extra permission
-            $stmt->execute(array($answerid, $_SESSION['s_user_id']));
+            if($_SESSION['s_user_permission'] > 1) {
+                $stmt = $db->prepare("DELETE FROM post WHERE postid = ? AND commentcount = 0");
+                $stmt->execute(array($answerid));
+            } else {
+                $stmt = $db->prepare("DELETE FROM post WHERE postid = ? AND ownerid = ? AND commentcount = 0"); 
+                $stmt->execute(array($answerid, $_SESSION['s_user_id']));
+            }
         } catch(Exception $e) {
             $db->rollBack();
             $errors->addError('notifiable', 'error processing delete from post table');
             throw ($errors);
         }
         
-
         // delete notifiable
         try {
             $stmt = $db->prepare("DELETE FROM notifiable WHERE notifiableid = ?");
@@ -160,6 +216,7 @@
         } catch(Exception $e) {
             $db->rollBack();
             $errors->addError('notifiable', 'error processing delete from notifiable table');
+            $errors->addError("DatabaseException", $e->getMessage());
             throw ($errors);
         }
 
