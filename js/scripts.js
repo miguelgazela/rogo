@@ -259,7 +259,7 @@ function addRemoveAnswerHandlers() {
     $(".answer .remove").click(function(e){
         var answerId = parseInt($(this).parent(".vote-area").attr("id").slice(10));
         $.post(BASE_URL+"ajax/answers/delete.php", {id: answerId}, function(response) {
-            console.log(response); // TODO remove
+            //console.log(response); // TODO remove
             if(response.requestStatus == "OK") {
                 $("#answer-"+answerId).remove();
 
@@ -274,6 +274,32 @@ function addRemoveAnswerHandlers() {
                 alert("Ups! An error occurred while trying to remove your answer. Please try again later."); // TODO improve warning quality
             }
         });
+    });
+}
+
+function deletePM(msgid, option) {
+    console.log("msgid: "+msgid+" option: "+option);
+    $.post(BASE_URL+"ajax/privmessages/delete.php", {id: msgid}, function(response) {
+        //console.log(response); // TODO remove
+        if(response.requestStatus == "OK") {
+            if(option === 1) { // deleting it from the list
+                var pm = $("#priv-message-"+msgid);
+                if(pm.hasClass("unread")) { // update unread messages counter
+                    var current = parseInt($("span.unread").text());
+                    if(current == 1) {
+                        $("span.unread").remove();
+                        $(".priv_messages").append("<p>You don't have any private messages...</p>");
+                    } else {
+                        $("span.unread").text(current-1);
+                    }
+                }
+                pm.remove();
+            } else if (option === 2) { // deleting it from the page
+                window.location.replace(BASE_URL+"pages/privmessages/list.php");
+            }
+        } else {
+            alert("Ups! An error occurred while trying to remove your private message. Please try again later."); // TODO improve warning quality
+        }
     });
 }
 
@@ -400,7 +426,7 @@ function getPrettyDate(date) {
 }
 
 function validateAnswerText() {
-    var answerText = $("#inputAnswer").val();
+    var answerText = $("#inputAnswer").val().trim();
 
     if(answerText.length < 20) {
         $(".inputAnswer > span.help-block").text("You need to write at least 20 characters");
@@ -565,9 +591,41 @@ function confirmPassword() {
     }
 }
 
+function replyToPM(receiverid) {
+    window.location.replace(BASE_URL+"pages/privmessages/add.php?id="+receiverid);
+}
+
+function validateSubject() {
+    // at least 15 characters
+    var numChars = $('#inputMessageSubject').val().trim().length;
+    if(numChars < 15) {
+        $('div.inputMessageSubject').addClass("error");
+        $('div.inputMessageSubject span.help-block').text("Subject must be at least 15 characters long.");
+        return false;
+    } else {
+        $('div.inputMessageSubject').removeClass("error");
+        $('div.inputMessageSubject span.help-block').text("");
+        return true;
+    }
+}
+
+function validateMessageDetails() {
+    // at least 30 characters
+    var numChars = $('#inputMessageDetails').val().trim().length;
+    if(numChars < 30) {
+        $('div.inputMessageDetails').addClass("error");
+        $('div.inputMessageDetails span.help-block').text("Details must be at least 30 characters. You entered "+numChars+".")
+        return false;
+    } else {
+        $('div.inputMessageDetails').removeClass("error");
+        $('div.inputMessageDetails span.help-block').text("");
+        return true;
+    }
+}
+
 function validateQuestion() {
     // at least 15 characters
-    var numChars = $('#inputQuestionTitle').val().length;
+    var numChars = $('#inputQuestionTitle').val().trim().length;
     if(numChars < 15) {
         $('div.inputQuestionTitle').addClass("error");
         $('div.inputQuestionTitle span.help-block').text("Title must be at least 15 characters long.");
@@ -581,7 +639,7 @@ function validateQuestion() {
 
 function validateQuestionDetails() {
     // at least 30 characters
-    var numChars = $('#inputQuestionDetails').val().length;
+    var numChars = $('#inputQuestionDetails').val().trim().length;
     if(numChars < 30) {
         $('div.inputQuestionDetails').addClass("error");
         $('div.inputQuestionDetails span.help-block').text("Details must be at least 30 characters. You entered "+numChars+".")

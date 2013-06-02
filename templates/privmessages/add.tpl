@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    
-    {include file="../header.tpl" title="Rogo - Send Message"}
+    {include file="../header.tpl" title="Rogo - Send Private Message"}
 
     <body>
 
@@ -10,34 +10,32 @@
         <div class="container">
             <div class="row">
                 <div class="span9">
-                    <h2 class="add_new_message">Send Message</h2>
-                    <form id="send_message_form" class="form-horizontal" action="{$BASE_URL}actions/privmessages/add_action.php" method="post">
-                        <div class="control-group inputQuestionTitle">
+                    {if $message_sent != ""}
+                        <p>Message sent!</p>
+                    {else}
+                    <h2 class="send_pm pull-left">Send PM to <a href="{$BASE_URL}pages/users/view.php?id={$receiver.userid}">{$receiver.username}</a></h2>
+                    <a class="pull-left avatar-frame" href="{$BASE_URL}pages/users/view.php?id={$receiver.userid}">
+                            <img class="media-object" src="{$receiver.gravatar}" />
+                    </a>
+                    <form id="send_pm_form" class="form-horizontal" action="{$BASE_URL}actions/privmessages/add_action.php" method="post">
+                        <div class="control-group inputMessageSubject">
                             <label class="control-label" for="inputMessageSubject">Subject</label>
                             <div class="controls">
-                                <input type="text" id="inputQuestionTitle" name="question" onblur="return validateQuestion()" placeholder="what's your question? Try to be specific." value="{$s_values.question}">
+                                <input type="text" id="inputMessageSubject" name="subject" onblur="validateSubject();" placeholder="what's the message subject?" value="{$s_values.subject}">
                             </div>
                             <span class="help-block"></span>
                         </div>
-                        <div class="control-group inputQuestionDetails">
-                            <label class="control-label" for="inputQuestionDetails">Details</label>
+                        <div class="control-group inputMessageDetails">
+                            <label class="control-label" for="inputMessageDetails">Details</label>
                             <div class="controls">
-                                <textarea rows="8" placeholder="provide more details about your question" id="inputQuestionDetails" name="details" onblur="return validateQuestionDetails()">{$s_values.details}</textarea>
+                                <textarea rows="8" placeholder="what's your message?" id="inputMessageDetails" name="details" onblur="validateMessageDetails();">{$s_values.details}</textarea>
                             </div>
                             <span class="help-block"></span>
                         </div>
-                        <div class="control-group inputQuestionTags">
-                            <label class="control-label" for="inputQuestionTags">Tags</label>
-                            <div class="controls">
-                                <input type="text" autocomplete="off" name="tags" id="inputQuestionTags" onblur="return validateTags()" value="" placeholder="at least one tag, max 5 tags, separate with spaces">
-                            </div>
-                            <span class="help-block"></span>
-                        </div>
-                        <div class="tags_container"></div>
                     </form>
-                    <button type="submit" form="ask_question_form" class="btn">Add Question</button>
+                    <button type="submit" form="send_pm_form" class="btn">Send message</button>
+                    {/if}
                 </div>
-
                 <div class="span3">
                     <div class="sidebar-content affix">
                         <a href="#" class="ask-question-btn">Ask Question</a>

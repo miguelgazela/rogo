@@ -11,11 +11,14 @@
                 <div class="span9">
                     <h3 class="inbox-header">Inbox <span class="badge badge-info unread">{if $number_unread_messages != 0}{$number_unread_messages}{/if}</span></h3>
                     <div class="priv_messages">
+                    	{if $number_private_messages == 0}
+                    		<p>You don't have any private messages...</p>
+                    	{else}
 						{foreach $private_messages as $message}
 						{if $message.read == false}
-							<div class="priv_message unread">
+							<div class="priv_message unread" id="priv-message-{$message.usermsgid}">
 						{else}
-							<div class="priv_message">
+							<div class="priv_message" id="priv-message-{$message.usermsgid}">
 						{/if}
 						
 						<img class="media-object pull-left" src="{$message.gravatar}">
@@ -28,17 +31,20 @@
 							<span class="message-excerpt">{$message.body}</span>
 						</div>
 						<div class="priv_message_actions pull-left">
-							<div class="read">
-								<i class="icon-bookmark"></i>
-								<span class="action">read</span>
-							</div>
-							<div class="remove">
+							<a href="{$BASE_URL}pages/privmessages/view.php?id={$message.usermsgid}">
+								<div class="read">
+									<i class="icon-bookmark"></i>
+									<span class="action">read</span>
+								</div>
+							</a>
+							<div class="remove" onclick="deletePM({$message.usermsgid}, 1);">
 								<i class="icon-trash"></i>
 								<span class="action">delete</span>
 							</div>
 						</div>
 						</div>                                 
-					{/foreach}
+						{/foreach}
+						{/if}
 					</div>
 					</div>
                 <div class="span3">

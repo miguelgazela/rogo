@@ -213,11 +213,6 @@
                     <div class="sidebar-content affix">
                         <a href="{$BASE_URL}pages/questions/add.php" class="ask-question-btn">Ask Question</a>
                     </div>
-
-                    {foreach $votes as $vote}
-                        <p>{$vote['requestStatus']}</p>
-                    {/foreach}
-
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="#"><i class="icon-comments-alt"></i> ROGO</a>
+                <a class="brand" href="{$BASE_URL}index.php"><i class="icon-comments-alt"></i> ROGO</a>
                 <ul class="nav">
                     <li class="_questions"><a href="{$BASE_URL}index.php"><i class="icon-question-sign"></i> Questions</a></li>
                     <li class="_users"><a href="{$BASE_URL}pages/users/list.php?sort=reputation"><i class="icon-group"></i> Users</a></li>

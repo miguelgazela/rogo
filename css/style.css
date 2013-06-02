@@ -567,41 +567,47 @@ a.username:hover {
  * 
  */
 
-h2.add_new_question {
+h2.add_new_question,
+h2.send_pm {
   color: #306aa2;
 }
 
-form#ask_question_form {
+form#ask_question_form,
+form#send_pm_form {
   margin-top: 40px;
 }
 
-form#ask_question_form .control-label {
+form#ask_question_form .control-label,
+form#send_pm_form .control-label {
   color: #306aa2;
   width: 100px;
 }
 
-form#ask_question_form .control-group .controls {
+form#ask_question_form .control-group .controls,
+form#send_pm_form .control-group .controls {
   margin-left: 120px;
 }
 
-form#ask_question_form .control-group textarea {
+form#ask_question_form .control-group textarea,
+form#send_pm_form .control-group textarea {
   width: 540px;
   max-width: 540px;
   padding: 5px 10px;
-  -webkit-border-radius: 0px;
-     -moz-border-radius: 0px;
-          border-radius: 0px;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
 }
 
-form#ask_question_form .controls input {
+form#ask_question_form .controls input,
+form#send_pm_form .controls input {
   padding: 5px 10px;
   width: 540px;
-  -webkit-border-radius: 0px;
-     -moz-border-radius: 0px;
-          border-radius: 0px;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
@@ -611,13 +617,16 @@ form#ask_question_form label.checkbox {
   margin-left: 120px;
 }
 
-form#ask_question_form span.help-block {
+form#ask_question_form span.help-block,
+form#send_pm_form span.help-block {
   margin-left: 120px;
   margin-top: 5px;
 }
 
 form#ask_question_form + .btn,
-form#ask_question_form + .btn + .btn {
+form#ask_question_form + .btn + .btn,
+form#send_pm_form + .btn,
+form#send_pm_form + .btn + .btn {
   width: 560px;
   height: 40px;
   margin-left: 120px;
@@ -638,7 +647,8 @@ form#ask_question_form + .btn + .btn {
 }
 
 form#ask_question_form + .btn:hover,
-form#ask_question_form + .btn.save + .btn.cancel:hover {
+form#ask_question_form + .btn.save + .btn.cancel:hover,
+form#send_pm_form + .btn:hover {
   background-color: #103d69;
 }
 
@@ -981,7 +991,8 @@ span.badge.unread {
 
 .priv_message {
   border-bottom: 1px solid #ddd;
-  height: 50px;
+  min-height: 50px;
+  /*height: 50px;*/
 }
 
 .priv_message.unread {
@@ -1024,6 +1035,10 @@ span.badge.unread {
   visibility: hidden;
 }
 
+.priv_message_actions>a:hover {
+  text-decoration: none;
+}
+
 .priv_message_actions div {
   width: 45px;
   background-color: #306aa2;
@@ -1044,10 +1059,6 @@ span.badge.unread {
   font-size: 13px;
 }
 
-.priv_message_actions div.remove > i {
-  
-}
-
 .priv_message:hover > .priv_message_actions {
   visibility: visible;
 }
@@ -1064,6 +1075,35 @@ span.message-excerpt {
   color: #bbb;
   font-size: 12px;
   display: block;
+}
+
+.pm_sender .media-body {
+  padding-left: 10px;
+}
+
+p.pm_body {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+form#send_pm_form {
+  margin-top: 100px;
+}
+
+.send_pm {
+  line-height: 30px;
+  margin-right: 20px;
+}
+
+.send_pm a {
+  text-decoration: underline;
+  color: #306AA2;
+}
+
+.send_pm a:hover {
+  color: #103d69;
 }
 
 /***********************************************************************
@@ -1156,6 +1196,114 @@ input.find-user {
   font-size: 12px;
   color: #a6a6a6;
  }
+
+ /***********************************************************************
+ *
+ *                      DRAFTS SECTION
+ *
+ * 
+ ***********************************************************************/
+
+
+.drafts {
+  margin-top: 20px;
+}
+
+.drafts .draft {
+  border-bottom: 1px solid #ddd;
+  height: 50px;
+  padding-left: 5px;
+}
+
+.draft .draft>div {
+  display: inline-block;
+}
+
+.draft>* {
+  margin-top: 5px;
+}
+
+.draft .info1 {
+  width: 592px;
+  padding-right: 3px;
+  background-color: orange;
+}
+
+.draft .actions {
+  width: 100px;
+  height: 40px;
+  visibility: hidden;
+}
+
+.draft:hover {
+  background-color: #eee;
+}
+
+.draft .actions div {
+  width: 45px;
+  background-color: #306aa2;
+  height: 30px;
+  padding: 5px 0px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+}
+
+.draft .actions>a:hover {
+  text-decoration: none;
+}
+
+.draft .actions div:hover {
+  cursor: pointer;
+  background-color: #103d69;
+}
+
+.draft .actions div > * {
+  display: block;
+  font-size: 13px;
+}
+
+.draft:hover > .actions {
+  visibility: visible;
+}
+
+p.message-excerpt {
+  color: #bbb;
+  font-size: 12px;
+  display: block;
+  margin: 0;
+}
+
+button.reply-pm,
+button.delete-pm {
+  width: 560px;
+  height: 30px;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 1px;
+  background-color: #306aa2;
+  background-image: none;
+  text-shadow: none;
+  border: 0;
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+  -webkit-transition: all 0.2s linear;
+     -moz-transition: all 0.2s linear;
+       -o-transition: all 0.2s linear;
+          transition: all 0.2s linear;
+}
+
+button.reply-pm:hover,
+button.delete-pm:hover {
+  background-color: #103d69;
+  color: white;
+}
+
+button.reply-pm,
+button.delete-pm {
+  width: 150px;
+}
 
 /***********************************************************************
  *
