@@ -315,6 +315,20 @@
         }
     }
 
+    function getSearchQuestions($word) {
+        global $db;
+
+        try {
+            $stmt = $db->prepare("SELECT question.*, post.*, username, email, reputation FROM question, post, rogouser WHERE questionid = postid AND post.ownerid = rogouser.userid AND lower(title) LIKE lower(?) ORDER BY lastactivitydate");
+            $stmt->execute(array("%$word%"));
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            $errors->addError('question', 'error processing select on question table');
+            $errors->addError('exception', $e->getMessage());
+            throw ($errors);
+        }
+    }
+
     function getNumberOfQuestionsOfUser($userid) {
         global $db;
 

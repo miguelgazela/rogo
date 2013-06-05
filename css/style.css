@@ -164,6 +164,7 @@ body._questions .nav > li._questions,
 body._signup .nav > li._signup,
 body._signin .nav > li._signin,
 body._users .nav > li._users,
+body._user .nav > li._user,
 body._tags .nav > li._tags {
   background-color: #103d69;
   border-bottom: 1px solid #103d69;
@@ -1122,6 +1123,11 @@ div.rogo-warning {
   font-size: 30px;
  }
 
+ .rogo-404 h2 {
+  color: #306aa2;
+  font-size: 40px;
+ }
+
  .rogo-warning p {
   font-size: 16px;
  }
@@ -1388,6 +1394,12 @@ button.delete-pm:hover {
 button.reply-pm,
 button.delete-pm {
   width: 150px;
+}
+
+span.matched-word {
+  float: none;
+  margin-left: 0;
+  background-color: #faac3c;
 }
 
 /***********************************************************************

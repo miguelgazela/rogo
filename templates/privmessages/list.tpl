@@ -3,7 +3,7 @@
 
 	{include file="../header.tpl" title="Rogo - {$s_username} Private Messages"}
 
-    <body>     
+    <body class="_user">     
 		{include file="../navbar.tpl"}
 		
         <div class="container">

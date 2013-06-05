@@ -3,7 +3,7 @@
    
     {include file="../header.tpl" title="Rogo - {$user.username}"}
 
-    <body>
+    <body class="_user">
         {include file="../navbar.tpl"}
         
         <div class="container">
@@ -146,7 +146,7 @@
                                         <p class="answer-body">{$draft.body}<a href="{$BASE_URL}pages/questions/view.php?id={$draft.questionid}"> - go to question</a>
                                         </p>
                                         <div class="started">
-                                            <span class="action-time" title="{$draft.lastactivity}">last saved {$draft.lastactivity_p}</span>
+                                            <span class="action-time" title="{$draft.lastactivitydate}">last saved {$draft.lastactivitydate_p}</span>
                                         </div>
                                     </div>
                                 </div>

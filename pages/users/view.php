@@ -75,7 +75,7 @@
 
     			foreach($drafts as &$draft) {
     				$draft['body'] = getSmallerText(htmlspecialchars(stripslashes($draft['body'])), 330);
-    				$draft['lastactivity_p'] = getPrettyDate($draft['lastactivity']);
+    				$draft['lastactivitydate_p'] = getPrettyDate($draft['lastactivitydate']);
     			}
 
     			$smarty->assign("total_number_drafts", $counter['total']);

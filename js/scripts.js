@@ -47,6 +47,30 @@ $(document).ready(function() {
 
     // define the action for accept answer button
     addAcceptAnswerHandlers();
+
+
+    // mark the search wods that matched in the title of the questions
+    $(".search_word").each(function(e){
+        var word = $(this).text().toLowerCase();
+
+        $(".question-title").each(function(e){
+
+            /*
+            var searchMask = "is";
+            var regEx = new RegExp(searchMask, "ig");
+            var replaceMask = "as";
+
+            var result = 'This iS IIS'.replace(regEx, replaceMask);
+            */
+
+            var searchMask = word;
+            var regEx = new RegExp(searchMask, "ig");
+            var replaceMask = "<span class='matched-word'>"+word+"</span>";
+            var before = $(this).html();
+            var after = before.replace(regEx, replaceMask);
+            $(this).html(after);
+        });
+    });
 });
 
 $("#signup_form").submit(function(event) {
@@ -90,7 +114,11 @@ function addAcceptAnswerHandlers() {
                     $(button).addClass("accepted");
                     $(".accept-answer").not(button).children('i').addClass("hide");
                 }
-                alert("Ups! An error occurred while trying to update this answer. Please try again later."); // TODO improve warning quality
+                if(response.errorCode != 13) {
+                    alert("Ups! An error occurred while trying to update this answer. Please try again later."); // TODO improve warning quality
+                } else {
+                    alert("Ups! This question doesn't belong to you, you can't accept answers for it.");
+                }
             }
         });
     });

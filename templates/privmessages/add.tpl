@@ -3,7 +3,7 @@
    
     {include file="../header.tpl" title="Rogo - Send Private Message"}
 
-    <body>
+    <body class="_user">
 
         {include file="../navbar.tpl"}
 
